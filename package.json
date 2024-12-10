@@ -1,6 +1,6 @@
 {
   "name": "@dhlx/dhlx-cli",
-  "version": "0.0.4",
+  "version": "0.1.0",
   "main": "./dist/index.js",
   "type": "module",
   "bin": {
@@ -24,13 +24,12 @@
   "license": "MIT",
   "description": "delay 函数是一个用于实现延迟功能的实用工具函数。它接受一个以毫秒为单位的时间参数，并返回一个 Promise，在指定的时间过后成功解决",
   "devDependencies": {
-    "@types/git-clone": "^0.2.4",
     "@types/figlet": "^1.5.8",
+    "@types/git-clone": "^0.2.4",
     "ava": "^6.1.3",
     "prettier": "^3.3.3",
     "typescript": "^5.6.2"
   },
-  "dependencies": {},
   "peerDependencies": {
     "@darkobits/lolcatjs": "^4.0.1",
     "@dhlx/resolver": "^0.0.6",
@@ -40,6 +39,7 @@
     "inquirer": "^11.0.2",
     "lodash": "^4.17.21",
     "ora": "^8.1.0",
+    "sharp": "^0.33.5",
     "shelljs": "^0.8.5"
   }
 }
