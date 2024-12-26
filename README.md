@@ -25,6 +25,7 @@ Commands:
   create [template] [project]  创建项目
   compress [options]           Compress images
   convert [options]            Convert image formats
+  init <type>                  Copy a specific configuration file (prettier or tsconfig) from the project to the current working directory
   help [command]               display help for command
 ```
 
@@ -99,6 +100,17 @@ dhlx convert -i ./image.jpg -o ./converted -f webp
 dhlx convert -i ./images -o ./converted -f png
 ```
 
+### 复制配置文件
+
+1. prettier
+
+```bash
+dhlx init prettier
+```
+2. tsconfig
+```bash
+dhlx init tsconfig
+```
 ## 五、贡献
 
 如果您发现任何问题或有改进的建议，欢迎提交 issue 或 pull request。
