@@ -1,5 +1,6 @@
 import sharp, { FormatEnum } from 'sharp'
 import { BaseOptions, validFiles } from './baseImage.js'
+import path from 'path'
 
 interface ConvertOptions extends BaseOptions {
     format: string
@@ -10,11 +11,12 @@ export async function convertImages(options: ConvertOptions): Promise<void> {
 
     await validFiles(
         options,
-        async (file, outputFile) => {
+        async (file, output, ext) => {
+            const outputFile = path.join(output, `${path.basename(file, ext)}.${format}`)
             await sharp(file)
                 .toFormat(format as keyof FormatEnum)
                 .toFile(outputFile)
-            console.log(`Compressed: ${file} -> ${outputFile}`)
+            console.log(`Converted: ${file} -> ${outputFile}`)
         },
         () => {
             if (!['jpg', 'png', 'webp'].includes(format.toLowerCase())) {

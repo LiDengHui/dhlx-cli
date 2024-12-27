@@ -5,7 +5,7 @@ export interface BaseOptions {
     input: string
     output: string
 }
-export async function validFiles<T extends BaseOptions>(options: T, eachHandle: (file: string, outputFile: string) => Promise<void>, beforeValid?: (options: T) => void): Promise<void> {
+export async function validFiles<T extends BaseOptions>(options: T, eachHandle: (file: string, outputFile: string, ext: string) => Promise<void>, beforeValid?: (options: T) => void): Promise<void> {
     const { input, output } = options
 
     if (!input) {
@@ -25,9 +25,6 @@ export async function validFiles<T extends BaseOptions>(options: T, eachHandle: 
             console.log(`Skipping unsupported file: ${file}`)
             continue
         }
-
-        const outputFile = path.join(output, path.basename(file))
-        await eachHandle(file, outputFile)
-        console.log(`Compressed: ${file} -> ${outputFile}`)
+        await eachHandle(file, output, ext)
     }
 }
