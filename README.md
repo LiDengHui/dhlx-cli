@@ -174,6 +174,26 @@ dhlx deploy -s build -z myapp.zip -h 192.168.1.100 -u root -p secret
 2. 上传到 `192.168.1.100` 的 `/var/www/uploads`
 3. 在 `/var/www/static` 解压
 
+### **4.使用配置方式**
+
+项目根目录下创建deployConfig.json文件，并将该文件添加到.gitignore中不上传到代码库
+```json
+[
+    {
+        "mode": "dev",
+        "source": "public",
+        "host": "8.8.8.8",
+        "password": "******",
+        "user": "root",
+        "remote": "/home/box/static/mini-app",
+        "extract": "/home/box/static/mini-app"
+    }
+]
+```
+运行部署命令就会将source目录打包成zip包并上传服务器解压缩，要求服务器安装unzip解压缩工具
+```shell
+dhlx deploy -m dev 
+```
 ## 五、贡献
 
 如果您发现任何问题或有改进的建议，欢迎提交 issue 或 pull request。
