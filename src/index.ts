@@ -3,10 +3,11 @@ import { compressImages } from './compress.js';
 import { transformed, version } from './version.js';
 import { program } from 'commander';
 import { convertImages } from './convert.js';
-import { copyConfigFile } from './init.js';
+import { copyConfigFile, getInitKeys } from './init.js';
 import { deployAction } from './uploadService.js';
 import fs from 'fs';
 import path from 'path';
+import processExcel from './processExcel.js';
 
 console.info(transformed);
 
@@ -21,7 +22,22 @@ program
             project,
         });
     });
+program
+    .command('process')
+    .description('处理 Excel 文件')
+    .option('-c, --config <path>', '指定配置文件路径 {process.js}', 'process.js')
+    .option('-i, --file <path>', '输入文件 {input.excel}', 'input.excel')
+    .option('-o, --out <path>', '输出文件 {output.excel}', 'output.excel')
+    .option('-b, --baseValue <string>', '对比源, {2025/6/1}', '2025/6/1')
+    .option('-t, --compareValue <string>', '对比项 {2025/5/1}', '2025/5/1')
+    .action(async (options) => {
+        // Construct the config path relative to the current working directory
+        const configPath = path.resolve(process.cwd(), options.config);
+        const configModule = await import(configPath);
+        const config = configModule.default;
 
+        await processExcel({ ...config, ...options });
+    });
 program
     .command('compress')
     .description('Compress images')
@@ -54,7 +70,7 @@ program
 program
     .command('init <type>')
     .description(
-        'Copy a specific configuration file (prettier or tsconfig or jscpd) from the project to the current working directory',
+        `Copy a specific configuration file [${getInitKeys()}] from the project to the current working directory`,
     )
     .action(copyConfigFile);
 
@@ -96,4 +112,5 @@ program
 
         await deployAction(finalOptions);
     });
+
 program.parse(process.argv);
