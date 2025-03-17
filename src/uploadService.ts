@@ -12,10 +12,11 @@ interface DeployOptions {
     password: string;
     remote: string;
     extract: string;
+    exclude: string[];
 }
 
 export async function deployAction(options: DeployOptions): Promise<void> {
-    const { source, zip, host, user, password, remote, extract } = options;
+    const { source, zip, host, user, password, remote, extract, exclude = [] } = options;
     console.log(options);
     if (!source) {
         console.error('Error: No source directory provided');
@@ -23,14 +24,14 @@ export async function deployAction(options: DeployOptions): Promise<void> {
     }
 
     const zipPath = path.resolve(zip);
-    await compressDirectory(source, zipPath); // Changed to compressDirectory
+    await compressDirectory(source, zipPath, exclude); // Changed to compressDirectory
     await uploadAndExtractFile(zipPath, { host, user, password, remote, extract });
     fs.unlinkSync(zipPath);
     console.log('Deployment complete');
 }
 
 // Compress contents of the source directory, not including the top-level directory
-async function compressDirectory(directory: string, zipPath: string): Promise<void> {
+async function compressDirectory(directory: string, zipPath: string, exclude: string[] = []): Promise<void> {
     return new Promise((resolve, reject) => {
         const output = fs.createWriteStream(zipPath);
         const archive = archiver('zip', { zlib: { level: 9 } });
@@ -44,6 +45,10 @@ async function compressDirectory(directory: string, zipPath: string): Promise<vo
             const files = fs.readdirSync(directory);
             files.forEach((file) => {
                 const fullPath = path.join(directory, file);
+
+                if (exclude.some((e: string) => fullPath === path.join(directory, e))) {
+                    return;
+                }
                 if (fs.lstatSync(fullPath).isDirectory()) {
                     // If it's a directory, add the directory recursively
                     archive.directory(fullPath, file);
