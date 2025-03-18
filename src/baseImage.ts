@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import log from './utils/log.js';
 
 export interface BaseOptions {
     input: string;
@@ -71,6 +72,10 @@ export async function validFiles<T extends BaseOptions>(
         fs.mkdirSync(outputDir, { recursive: true });
 
         // Call the provided handler function for the file
-        await eachHandle(file, outputDir, ext);
+        try {
+            await eachHandle(file, outputDir, ext);
+        } catch (e) {
+            log.error(e);
+        }
     }
 }
