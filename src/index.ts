@@ -9,6 +9,7 @@ import fs from 'fs';
 import path from 'path';
 import processExcel from './processExcel.js';
 import { imageSize } from './imageSize.js';
+import { wordToHtml } from './wordToHtml.js';
 
 console.info(transformed);
 
@@ -69,13 +70,25 @@ program
         });
     });
 
+program
+    .command('word-to-html')
+    .description('Change word to html')
+    .option('-i, --input <path>', 'Input file or folder path')
+    .option('-o, --output <path>', 'Output folder path', './output')
+    .action(async (options) => {
+        await wordToHtml({
+            input: options.input,
+            output: options.output,
+        });
+    });
+
 // 转换子命令
 program
     .command('convert')
     .description('Convert image formats')
     .option('-i, --input <path>', 'Input file or folder path')
     .option('-o, --output <path>', 'Output folder path', './output')
-    .option('-f, --format <format>', 'Target image format (jpg, png, webp)', 'jpg')
+    .option('-f, --format <string>', 'Target image format (jpg, png, webp)', 'jpg')
     .action(async (options) => {
         await convertImages({
             input: options.input,
