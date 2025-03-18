@@ -25,6 +25,7 @@ Commands:
   create [template] [project]  创建项目
   process [options]            处理 Excel 文件
   compress [options]           Compress images
+  image-size [options]         Change images size
   convert [options]            Convert image formats
   init <type>                  Copy a specific configuration file [prettier,tsconfig,jscpd,deploy,process] from the project to the current working directory
   deploy [options]             Compress specified directories and upload to server
@@ -50,7 +51,7 @@ dhlx init deploy // 代码部署配置
 dhlx init process // xlsx对比配置
 ```
 
-### [convert命令-图片格式转换与压缩](./README_IMAGE.md)
+### [图片格式转换与压缩](./README_IMAGE.md)
 ### [deploy命令-文件ssh上传](./README_DEPLOY.md) 
 ### [process命令-excel数据处理](./README_PROCESS.md)
 

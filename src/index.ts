@@ -8,6 +8,7 @@ import { deployAction } from './uploadService.js';
 import fs from 'fs';
 import path from 'path';
 import processExcel from './processExcel.js';
+import { imageSize } from './imageSize.js';
 
 console.info(transformed);
 
@@ -49,6 +50,22 @@ program
             input: options.input,
             output: options.output,
             quality: parseInt(options.quality, 10),
+        });
+    });
+
+program
+    .command('image-size')
+    .description('Change images size')
+    .option('-i, --input <path>', 'Input file or folder path')
+    .option('-o, --output <path>', 'Output folder path', './output')
+    .option('-w, --width <number>', 'Image width', '500')
+    .option('-h, --height <number>', 'Image Height', '500')
+    .action(async (options) => {
+        await imageSize({
+            input: options.input,
+            output: options.output,
+            width: parseInt(options.width),
+            height: parseInt(options.height),
         });
     });
 
