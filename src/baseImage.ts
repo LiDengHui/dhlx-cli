@@ -5,8 +5,9 @@ export interface BaseOptions {
     input: string;
     output: string;
 }
-
+export const defaultImage = ['.jpg', '.jpeg', '.png', '.webp'];
 export async function validFiles<T extends BaseOptions>(
+    exts = defaultImage,
     options: T,
     eachHandle: (file: string, outputFile: string, ext: string) => Promise<void>,
     beforeValid?: (options: T) => void,
@@ -56,7 +57,7 @@ export async function validFiles<T extends BaseOptions>(
         }
 
         const ext = path.extname(file);
-        if (!['.jpg', '.jpeg', '.png', '.webp'].includes(ext.toLowerCase())) {
+        if (!exts.includes(ext.toLowerCase())) {
             console.log(`Skipping unsupported file: ${file}`);
             continue;
         }
