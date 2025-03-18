@@ -57,3 +57,9 @@ dhlx convert -i ./image.jpg -o ./converted -f webp
 ```bash
 dhlx convert -i ./images -o ./converted -f png
 ```
+
+3. 批量图片size
+
+```shell
+dhlx image-size -i ./images -o ./converted -w 500 -h 600
+```
