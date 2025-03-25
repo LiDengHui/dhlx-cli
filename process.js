@@ -1,4 +1,5 @@
 export default {
+    sheet: 'Sheet1',
     file: './input.xlsx',
     out: './output.xlsx',
     key: ['id', 'category'],
