@@ -10,6 +10,8 @@ import path from 'path';
 import processExcel from './processExcel.js';
 import { imageSize } from './imageSize.js';
 import { wordToHtml } from './wordToHtml.js';
+import { excel2json } from './excel2json.js';
+import { json2excel } from './json2excel.js';
 
 console.info(transformed);
 
@@ -28,18 +30,18 @@ program
     .command('process')
     .description('处理 Excel 文件')
     .option('-c, --config <path>', '指定配置文件路径 {process.js}', 'process.js')
-    .option('-i, --file <path>', '输入文件 {input.excel}', 'input.excel')
-    .option('-o, --out <path>', '输出文件 {output.excel}', 'output.excel')
-    .option('-b, --baseValue <string>', '对比源, {2025/6/1}', '2025/6/1')
-    .option('-t, --compareValue <string>', '对比项 {2025/5/1}', '2025/5/1')
+    .option('-i, --file <path>', '输入文件 {input.excel}')
+    .option('-o, --out <path>', '输出文件 {output.excel}')
+    .option('-b, --baseValue <string>', '对比源, {2025/6/1}')
+    .option('-t, --compareValue <string>', '对比项 {2025/5/1}')
+    .option('-s, --sheet <string></string>', 'sheetName 默认第一个')
     .action(async (options) => {
-        // Construct the config path relative to the current working directory
         const configPath = path.resolve(process.cwd(), options.config);
         const configModule = await import(configPath);
         const config = configModule.default;
-
         await processExcel({ ...config, ...options });
     });
+
 program
     .command('compress')
     .description('Compress images')
@@ -59,14 +61,18 @@ program
     .description('Change images size')
     .option('-i, --input <path>', 'Input file or folder path')
     .option('-o, --output <path>', 'Output folder path', './output')
-    .option('-w, --width <number>', 'Image width', '500')
-    .option('-h, --height <number>', 'Image Height', '500')
+    .option('-w, --width <number>', 'Image width')
+    .option('-h, --height <number>', 'Image Height')
+    .option('-f, --fit <string>', 'fit contain｜cover｜fill｜inside｜outside')
+    .option('-p, --position <string>', 'position, top center bottom left right', 'center')
     .action(async (options) => {
         await imageSize({
             input: options.input,
             output: options.output,
             width: parseInt(options.width),
             height: parseInt(options.height),
+            fit: options.fit,
+            position: options.position,
         });
     });
 
@@ -141,6 +147,41 @@ program
         }
 
         await deployAction(finalOptions);
+    });
+
+program
+    .command('excel2json')
+    .description('将 Excel 文件转换为 JSON 格式')
+    .option('-c, --config <path>', '配置文件路径 {excel2json.js}')
+    .option('-i, --input <path>', '输入 Excel 文件路径 {input.xlsx}')
+    .option('-o, --output <path>', '输出 JSON 文件路径，未提供时打印到控制台')
+    .option('-s, --sheet <name>', '指定 sheet 名称，默认第一个')
+    .action(async (options) => {
+        let config = {};
+        if (options.config) {
+            const configPath = path.resolve(process.cwd(), options.config);
+            const configModule = await import(configPath);
+            config = configModule.default;
+        }
+        await excel2json({ ...config, ...options });
+    });
+
+program
+    .command('json2excel')
+    .description('将  JSON 文件转换为 Excel 格式')
+    .option('-c, --config <path>', '配置文件路径 {excel2json.js}')
+    .option('-i, --input <path>', '输入 Excel 文件路径 {input.xlsx}')
+    .option('-o, --output <path>', '输出 JSON 文件路径，未提供时打印到控制台')
+    .option('-s, --sheet <name>', '指定 sheet 名称，默认第一个')
+    .option('-d, --data <object| string>', '数据')
+    .action(async (options) => {
+        let config = {};
+        if (options.config) {
+            const configPath = path.resolve(process.cwd(), options.config);
+            const configModule = await import(configPath);
+            config = configModule.default;
+        }
+        await json2excel({ ...config, ...options });
     });
 
 program.parse(process.argv);

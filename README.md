@@ -30,7 +30,10 @@ Commands:
   convert [options]            Convert image formats
   init <type>                  Copy a specific configuration file [prettier,tsconfig,jscpd,deploy,process] from the project to the current working directory
   deploy [options]             Compress specified directories and upload to server
+  excel2json [options]         将 Excel 文件转换为 JSON 格式
+  json2excel [options]         将  JSON 文件转换为 Excel 格式
   help [command]               display help for command
+
 ```
 
 ## 四、参数
@@ -60,6 +63,7 @@ dhlx word-to-html -i ./input -o ./output
 ### [图片格式转换与压缩](./README_IMAGE.md)
 ### [deploy命令-文件ssh上传](./README_DEPLOY.md) 
 ### [process命令-excel数据处理](./README_PROCESS.md)
+### [excel与json-相互转换](./README_EXCEL_JSON.md)
 
 
 ## 五、贡献

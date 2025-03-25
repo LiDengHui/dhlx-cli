@@ -2,6 +2,7 @@ import path from 'path';
 import { readExcel, writeExcel } from './utils/excel.js';
 
 export interface Config<T = any> {
+    sheetName?: string;
     file: string;
     out: string;
     key: string[];
@@ -27,7 +28,7 @@ function generateKey(data: Record<string, any>, keys: string[]): string {
 export default async function processExcel<T extends object>(config: Config<T>) {
     console.log(config);
     console.log('读取 Excel 文件...');
-    const inputData: T[] = readExcel(config.file);
+    const inputData: T[] = readExcel(config.file, { sheetName: config.sheetName });
 
     console.log('处理 Excel 数据...');
     const groupedData: Record<string, T[]> = {};
@@ -60,6 +61,7 @@ export default async function processExcel<T extends object>(config: Config<T>) 
 
     const commonKeys = [...new Set([...baseKeys, ...compareKeys])];
 
+    console.log(commonKeys);
     commonKeys.forEach((groupKey) => {
         const baseData = groupedData2[`${config.baseValue}_${groupKey}`] as T;
         const compareData = groupedData2[`${config.compareValue}_${groupKey}`] as T;
@@ -68,7 +70,9 @@ export default async function processExcel<T extends object>(config: Config<T>) 
     });
 
     console.log('写入 Excel 文件...');
-    writeExcel(config.out, results);
+    writeExcel(config.out, results, {
+        sheetName: config.sheetName,
+    });
 
     console.log('Excel 处理完成！');
 }
