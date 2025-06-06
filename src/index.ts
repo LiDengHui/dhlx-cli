@@ -13,6 +13,7 @@ import { wordToHtml } from './wordToHtml.js';
 import { excel2json } from './excel2json.js';
 import { json2excel } from './json2excel.js';
 import {ghPages} from "./gh-pages.js";
+import {BaseOptions} from "./baseImage.js";
 
 console.info(transformed);
 
@@ -150,6 +151,18 @@ program
         await deployAction(finalOptions);
     });
 
+async function  createConfigOptions(options: any) {
+    let config = {};
+    if (options.config) {
+        const configPath = path.resolve(process.cwd(), options.config);
+        const configModule = await import(configPath);
+        config = configModule.default;
+    }
+    return  {
+        ...config,
+        ...options,
+    } as BaseOptions
+}
 program
     .command('excel2json')
     .description('将 Excel 文件转换为 JSON 格式')
@@ -158,13 +171,8 @@ program
     .option('-o, --output <path>', '输出 JSON 文件路径，未提供时打印到控制台')
     .option('-s, --sheet <name>', '指定 sheet 名称，默认第一个')
     .action(async (options) => {
-        let config = {};
-        if (options.config) {
-            const configPath = path.resolve(process.cwd(), options.config);
-            const configModule = await import(configPath);
-            config = configModule.default;
-        }
-        await excel2json({ ...config, ...options });
+        const config = await createConfigOptions(options)
+        excel2json(config);
     });
 
 program
@@ -176,13 +184,8 @@ program
     .option('-s, --sheet <name>', '指定 sheet 名称，默认第一个')
     .option('-d, --data <object| string>', '数据')
     .action(async (options) => {
-        let config = {};
-        if (options.config) {
-            const configPath = path.resolve(process.cwd(), options.config);
-            const configModule = await import(configPath);
-            config = configModule.default;
-        }
-        await json2excel({ ...config, ...options });
+        const config = await createConfigOptions(options)
+        json2excel(config);
     });
 
 program.command('gh-pages')
