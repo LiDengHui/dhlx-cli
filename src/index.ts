@@ -12,6 +12,7 @@ import { imageSize } from './imageSize.js';
 import { wordToHtml } from './wordToHtml.js';
 import { excel2json } from './excel2json.js';
 import { json2excel } from './json2excel.js';
+import {ghPages} from "./gh-pages.js";
 
 console.info(transformed);
 
@@ -183,5 +184,13 @@ program
         }
         await json2excel({ ...config, ...options });
     });
+
+program.command('gh-pages')
+    .description("部署git hub page 页面")
+    .option('-i, --input <path>', '输入创建pg-pages branch 目录')
+    .action(async (options)=>{
+        const input =  options.input;
+        await ghPages({input});
+    })
 
 program.parse(process.argv);
