@@ -12,8 +12,10 @@ import { imageSize } from './imageSize.js';
 import { wordToHtml } from './wordToHtml.js';
 import { excel2json } from './excel2json.js';
 import { json2excel } from './json2excel.js';
-import {ghPages} from "./gh-pages.js";
-import {BaseOptions} from "./baseImage.js";
+import { ghPages } from './gh-pages.js';
+import { BaseOptions } from './baseImage.js';
+import { codeLine } from './codeLine.js';
+import log from './utils/log.js';
 
 console.info(transformed);
 
@@ -151,18 +153,19 @@ program
         await deployAction(finalOptions);
     });
 
-async function  createConfigOptions(options: any) {
+async function createConfigOptions(options: any) {
     let config = {};
     if (options.config) {
         const configPath = path.resolve(process.cwd(), options.config);
         const configModule = await import(configPath);
         config = configModule.default;
     }
-    return  {
+    return {
         ...config,
         ...options,
-    } as BaseOptions
+    } as BaseOptions;
 }
+
 program
     .command('excel2json')
     .description('将 Excel 文件转换为 JSON 格式')
@@ -171,7 +174,7 @@ program
     .option('-o, --output <path>', '输出 JSON 文件路径，未提供时打印到控制台')
     .option('-s, --sheet <name>', '指定 sheet 名称，默认第一个')
     .action(async (options) => {
-        const config = await createConfigOptions(options)
+        const config = await createConfigOptions(options);
         excel2json(config);
     });
 
@@ -184,16 +187,43 @@ program
     .option('-s, --sheet <name>', '指定 sheet 名称，默认第一个')
     .option('-d, --data <object| string>', '数据')
     .action(async (options) => {
-        const config = await createConfigOptions(options)
+        const config = await createConfigOptions(options);
         json2excel(config);
     });
 
-program.command('gh-pages')
-    .description("部署git hub page 页面")
+program
+    .command('gh-pages')
+    .description('部署git hub page 页面')
     .option('-i, --input <path>', '输入创建pg-pages branch 目录')
-    .action(async (options)=>{
-        const input =  options.input;
-        await ghPages({input});
-    })
+    .action(async (options) => {
+        const input = options.input;
+        await ghPages({ input });
+    });
 
+program
+    .command('code-line')
+    .description('统计代码行数')
+    .option('-i, --input <path>', '指定扫描目录', './') // 默认当前目录
+    .option('-e, --excludes <excludes>', '排除的目录（逗号分隔）', ['node_modules', '.git', 'dist', 'build'])
+    .option('-t, --extensions <extensions>', '包含的文件扩展名（逗号分隔）', [
+        '.js',
+        '.ts',
+        '.jsx',
+        '.tsx',
+        '.vue',
+        '.html',
+        '.css',
+        '.scss',
+        '.mjs',
+    ])
+    .option('-d, --detail', '显示详细信息')
+    .option('--no-empty-line', '排除空行统计')
+    .option('--no-comment-line', '排除注释行统计')
+    .action(async (options) => {
+        if (options.detail) {
+            log.info(JSON.stringify(options, null, 4));
+        }
+
+        await codeLine(options);
+    });
 program.parse(process.argv);

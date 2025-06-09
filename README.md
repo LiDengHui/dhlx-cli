@@ -33,6 +33,7 @@ Commands:
   excel2json [options]         将 Excel 文件转换为 JSON 格式
   json2excel [options]         将  JSON 文件转换为 Excel 格式
   gh-pages [options]           部署git hub page 页面
+  code-line [options]          统计代码行数
   help [command]               display help for command
 
 ```
@@ -67,6 +68,21 @@ dhlx word-to-html -i ./input -o ./output
 ```shell
 dhlx gh-pages -i dist
 ```
+### 统计代码行数
+
+```shell
+
+dhlx code-line -e .report,node_modules,idea,.git,.github,.dist --detail
+```
+| 参数                  | 简写   | 类型         | 默认值                                            | 描述              |
+|---------------------|------|------------|------------------------------------------------|-----------------|
+| `--input`           | `-i` | `<path>`   | `./`                                           | 指定要扫描的目录        |
+| `--excludes`        | `-e` | `<string>` | `node_modules,.git,dist,build`                 | 要排除的目录，使用逗号分隔   |
+| `--extensions`      | `-t` | `<string>` | `.js,.ts,.jsx,.tsx,.vue,.html,.css,.scss,.mjs` | 要统计的文件扩展名，逗号分隔  |
+| `--detail`          | `-d` | `flag`     | -                                              | 输出详细的配置信息（用于调试） |
+| `--no-empty-line`   | -    | `flag`     | -                                              | 排除空行统计          |
+| `--no-comment-line` | -    | `flag`     | -                                              | 排除注释行统计         |
+
 
 ### [图片格式转换与压缩](./README_IMAGE.md)
 ### [deploy命令-文件ssh上传](./README_DEPLOY.md) 
