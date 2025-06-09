@@ -22,12 +22,15 @@ console.info(transformed);
 program.version(version);
 
 program
-    .command('create [template] [project]')
+    .command('create [project]')
     .description('创建项目')
-    .action(async (template, project) => {
+    .option('-t, --template <path>', "模版名称")
+    .option('-d, --detail <path>', "详细详细")
+    .action(async (project, options) => {
         await createProject({
-            template,
             project,
+            template: options.template,
+            description: options.detail
         });
     });
 program

@@ -13,7 +13,7 @@ interface Template {
 }
 const Dictionary: Record<string, Template> = {
     'vite-lib': {
-        url: 'https://github.com/LiDengHui/format-size-units.git',
+        url: 'https://github.com/LiDengHui/cookie.git',
     },
     'ts-lib': {
         url: 'https://github.com/LiDengHui/resolver.git',
@@ -23,6 +23,7 @@ const Dictionary: Record<string, Template> = {
 interface CreateProjectConfig {
     template: string;
     project: string;
+    description: string;
 }
 
 const getOptions = async (config: Partial<CreateProjectConfig>) => {
@@ -31,7 +32,7 @@ const getOptions = async (config: Partial<CreateProjectConfig>) => {
     if (!config?.project) {
         questions.push({
             type: 'input',
-            message: color('① 请输入文件夹名称'),
+            message: color('1 请输入文件夹名称'),
             name: 'project',
             default: 'my-project',
         });
@@ -41,9 +42,18 @@ const getOptions = async (config: Partial<CreateProjectConfig>) => {
         questions.push({
             type: 'list',
             name: 'template',
-            message: color('② 请选择开发语言'),
+            message: color('2 请选择开发语言'),
             choices: ['vite-lib', 'ts-lib'],
         });
+    }
+
+    if (!config?.description) {
+        questions.push({
+            type: "input",
+            message: color('3 请输入描述信息'),
+            name: 'description',
+            default: ""
+        })
     }
 
     const answers = await inquirer.prompt(questions as any);
@@ -89,7 +99,12 @@ const writePackageJSON = async (config: CreateProjectConfig) => {
 
     jsonData.name = `@dhlx/${config.project}`;
     jsonData.version = '0.0.1';
-    _.set(jsonData, 'repository.url', '');
+    jsonData.description = config.description;
+    const x = _.get(jsonData, 'repository.url', '');
+    const m = x.replace('cookie', config.project)
+    _.set(jsonData, 'repository.url', m);
+
+
 
     writeJson(packageJSONPath, jsonData);
 };
