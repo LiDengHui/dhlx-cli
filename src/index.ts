@@ -17,7 +17,6 @@ import { BaseOptions } from './baseImage.js';
 import { codeLine } from './codeLine.js';
 import log from './utils/log.js';
 import { codeMap } from './code-map.js';
-import pdf2html from "pdf2html";
 import {pdfToHtml} from "./pdfToHtml.js";
 
 console.info(transformed);
