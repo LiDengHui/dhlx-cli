@@ -16,6 +16,9 @@ import { ghPages } from './gh-pages.js';
 import { BaseOptions } from './baseImage.js';
 import { codeLine } from './codeLine.js';
 import log from './utils/log.js';
+import { codeMap } from './code-map.js';
+import pdf2html from "pdf2html";
+import {pdfToHtml} from "./pdfToHtml.js";
 
 console.info(transformed);
 
@@ -24,13 +27,13 @@ program.version(version);
 program
     .command('create [project]')
     .description('创建项目')
-    .option('-t, --template <path>', "模版名称")
-    .option('-d, --detail <path>', "详细详细")
+    .option('-t, --template <path>', '模版名称')
+    .option('-d, --detail <path>', '详细详细')
     .action(async (project, options) => {
         await createProject({
             project,
             template: options.template,
-            description: options.detail
+            description: options.detail,
         });
     });
 program
@@ -90,6 +93,17 @@ program
     .option('-o, --output <path>', 'Output folder path', './output')
     .action(async (options) => {
         await wordToHtml({
+            input: options.input,
+            output: options.output,
+        });
+    });
+program
+    .command('pdf2html')
+    .description('Change pdf to html')
+    .option('-i, --input <path>', 'Input file or folder path')
+    .option('-o, --output <path>', 'Output folder path', './output')
+    .action(async (options) => {
+        await pdfToHtml({
             input: options.input,
             output: options.output,
         });
@@ -228,5 +242,15 @@ program
         }
 
         await codeLine(options);
+    });
+
+program
+    .command('code-map')
+    .description('生成代码依赖图')
+    .option('-i, --input <path>', '输入文件')
+    .option('-t, --type <path>', '输出目录', 'g6')
+    .option('-d, --deep <number>', '深度', '2')
+    .action(async (options) => {
+        codeMap(options);
     });
 program.parse(process.argv);

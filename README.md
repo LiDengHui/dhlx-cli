@@ -58,9 +58,14 @@ dhlx init process // xlsx对比配置
 ```
 
 
-### 批量将word转换成excel
+### 批量将word转换成html
 ```shell
 dhlx word-to-html -i ./input -o ./output
+```
+### 批量将pdf 转换成 html
+```shell
+brew install poppler
+dhlx pdf2html -i./input -o./output
 ```
 
 ### 部署github pages 页面， 将发布新的分支到 gh-pages分支
@@ -74,6 +79,7 @@ dhlx gh-pages -i dist
 
 dhlx code-line -e .report,node_modules,idea,.git,.github,.dist --detail
 ```
+
 | 参数                  | 简写   | 类型         | 默认值                                            | 描述              |
 |---------------------|------|------------|------------------------------------------------|-----------------|
 | `--input`           | `-i` | `<path>`   | `./`                                           | 指定要扫描的目录        |
