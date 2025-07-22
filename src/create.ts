@@ -18,6 +18,9 @@ const Dictionary: Record<string, Template> = {
     'ts-lib': {
         url: 'https://github.com/LiDengHui/resolver.git',
     },
+    'vitepress-plugin': {
+        url: 'https://github.com/LiDengHui/vitepress-plugin-mindmap.git',
+    }
 };
 
 interface CreateProjectConfig {
@@ -43,7 +46,7 @@ const getOptions = async (config: Partial<CreateProjectConfig>) => {
             type: 'list',
             name: 'template',
             message: color('2 请选择开发语言'),
-            choices: ['vite-lib', 'ts-lib'],
+            choices: Object.keys(Dictionary),
         });
     }
 
@@ -80,7 +83,9 @@ const downloadTemplate = async (config: CreateProjectConfig) => {
 
     spinner.start();
 
-    await clone(template.url, projectPath);
+    await clone(template.url, projectPath, {
+        shallow: true
+    });
 
     spinner.stop();
 
