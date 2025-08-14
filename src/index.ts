@@ -17,7 +17,9 @@ import { BaseOptions } from './baseImage.js';
 import { codeLine } from './codeLine.js';
 import log from './utils/log.js';
 import { codeMap } from './code-map.js';
-import {pdfToHtml} from "./pdfToHtml.js";
+import { pdfToHtml } from './pdfToHtml.js';
+import { loginAction, checkLoginStatus } from './login.js';
+import { publishAction, validateMicroConfig } from './micro.js';
 
 console.info(transformed);
 
@@ -252,4 +254,51 @@ program
     .action(async (options) => {
         codeMap(options);
     });
+
+program
+    .command('login')
+    .description('登录 nest-serve 后台')
+    .option('-u, --username <username>', '用户名')
+    .option('-p, --password <password>', '密码')
+    .option('-s, --server <server>', '服务器地址', 'http://localhost:3000')
+    .action(async (options) => {
+        await loginAction(options);
+    });
+
+program
+    .command('logout')
+    .description('退出登录')
+    .action(async () => {
+        const { deleteCredentials } = await import('./utils/auth.js');
+        deleteCredentials();
+        log.success('已成功退出登录');
+    });
+
+program
+    .command('status')
+    .description('查看登录状态')
+    .action(async () => {
+        await checkLoginStatus();
+    });
+
+const microCommand = program.command('micro').description('微应用管理');
+
+microCommand
+    .command('publish')
+    .description('发布微应用')
+    .option('-d, --dist <path>', 'dist 目录路径', './dist')
+    .option('-s, --server <server>', '服务器地址', 'http://localhost:3000')
+    .option('-z, --zip-name <name>', 'ZIP 文件名')
+    .action(async (options: any) => {
+        await publishAction(options);
+    });
+
+microCommand
+    .command('validate')
+    .description('验证微应用配置')
+    .option('-d, --dist <path>', 'dist 目录路径', './dist')
+    .action((options: any) => {
+        validateMicroConfig(options.dist);
+    });
+
 program.parse(process.argv);
