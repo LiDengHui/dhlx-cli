@@ -20,6 +20,7 @@ import { codeMap } from './code-map.js';
 import { pdfToHtml } from './pdfToHtml.js';
 import { loginAction, checkLoginStatus } from './login.js';
 import { publishAction, validateMicroConfig } from './micro.js';
+import { setConfig, getConfig, getAllConfig, deleteConfig, clearConfig, showConfig } from './config.js';
 
 console.info(transformed);
 
@@ -256,11 +257,79 @@ program
     });
 
 program
+    .command('config')
+    .description('配置管理')
+    .option('set <key> <value>', '设置配置项')
+    .option('get <key>', '获取配置项')
+    .option('list', '显示所有配置')
+    .option('delete <key>', '删除配置项')
+    .option('clear', '清空所有配置')
+    .action(async (options) => {
+        const args = process.argv.slice(3); // 获取 config 命令后的参数
+
+        if (args.length === 0) {
+            // 显示所有配置
+            showConfig();
+            return;
+        }
+
+        const subCommand = args[0];
+
+        switch (subCommand) {
+            case 'set':
+                if (args.length < 3) {
+                    log.error('用法: dhlx config set <key> <value>');
+                    process.exit(1);
+                }
+                setConfig(args[1], args[2]);
+                log.success(`配置已设置: ${args[1]} = ${args[2]}`);
+                break;
+
+            case 'get':
+                if (args.length < 2) {
+                    log.error('用法: dhlx config get <key>');
+                    process.exit(1);
+                }
+                const value = getConfig(args[1]);
+                if (value !== undefined) {
+                    console.log(value);
+                } else {
+                    log.error(`配置项 "${args[1]}" 不存在`);
+                    process.exit(1);
+                }
+                break;
+
+            case 'list':
+                showConfig();
+                break;
+
+            case 'delete':
+                if (args.length < 2) {
+                    log.error('用法: dhlx config delete <key>');
+                    process.exit(1);
+                }
+                deleteConfig(args[1]);
+                log.success(`配置已删除: ${args[1]}`);
+                break;
+
+            case 'clear':
+                clearConfig();
+                log.success('所有配置已清空');
+                break;
+
+            default:
+                log.error(`未知的子命令: ${subCommand}`);
+                log.info('可用命令: set, get, list, delete, clear');
+                process.exit(1);
+        }
+    });
+
+program
     .command('login')
     .description('登录 nest-serve 后台')
     .option('-u, --username <username>', '用户名')
     .option('-p, --password <password>', '密码')
-    .option('-s, --server <server>', '服务器地址', 'http://localhost:3000')
+    .option('-s, --server <server>', '服务器地址')
     .action(async (options) => {
         await loginAction(options);
     });
@@ -287,7 +356,7 @@ microCommand
     .command('publish')
     .description('发布微应用')
     .option('-d, --dist <path>', 'dist 目录路径', './dist')
-    .option('-s, --server <server>', '服务器地址', 'http://localhost:3000')
+    .option('-s, --server <server>', '服务器地址')
     .option('-z, --zip-name <name>', 'ZIP 文件名')
     .action(async (options: any) => {
         await publishAction(options);

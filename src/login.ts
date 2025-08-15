@@ -1,5 +1,7 @@
 import readline from 'readline';
+import readlineSync from 'readline-sync';
 import { saveCredentials, deleteCredentials, LoginCredentials } from './utils/auth.js';
+import { getConfig } from './config.js';
 import log from './utils/log.js';
 
 interface LoginOptions {
@@ -32,57 +34,24 @@ function prompt(question: string): Promise<string> {
 }
 
 /**
- * 隐藏密码输入
+ * 隐藏密码输入 - 使用 readline-sync
  */
 function promptPassword(question: string): Promise<string> {
-    const rl = createInterface();
     return new Promise((resolve) => {
-        // 检查是否在交互式环境中
-        if (!process.stdin.isTTY) {
-            // 非交互式环境，使用简单的输入
+        try {
+            const password = readlineSync.question(question, {
+                hideEchoBack: true,
+                mask: '*',
+            });
+            resolve(password.trim());
+        } catch (error) {
+            // 如果 readline-sync 失败，回退到简单输入
+            const rl = createInterface();
             rl.question(question, (answer) => {
                 rl.close();
                 resolve(answer.trim());
             });
-            return;
         }
-
-        // 交互式环境，使用隐藏输入
-        process.stdout.write(question);
-        process.stdin.setRawMode(true);
-        process.stdin.resume();
-        process.stdin.setEncoding('utf8');
-
-        let password = '';
-
-        process.stdin.on('data', (char: Buffer) => {
-            const charStr = char.toString();
-
-            switch (charStr) {
-                case '\n':
-                case '\r':
-                case '\u0004':
-                    process.stdin.setRawMode(false);
-                    process.stdin.pause();
-                    process.stdout.write('\n');
-                    rl.close();
-                    resolve(password);
-                    break;
-                case '\u0003':
-                    process.exit();
-                    break;
-                case '\u007f': // backspace
-                    if (password.length > 0) {
-                        password = password.slice(0, -1);
-                        process.stdout.write('\b \b');
-                    }
-                    break;
-                default:
-                    password += charStr;
-                    process.stdout.write('*');
-                    break;
-            }
-        });
     });
 }
 
@@ -137,7 +106,15 @@ export async function loginAction(options: LoginOptions): Promise<void> {
         // 获取登录信息
         let username = options.username;
         let password = options.password;
-        let server = options.server || 'http://localhost:3000';
+        let server = options.server;
+
+        // 如果没有提供服务器地址，从配置中获取
+        if (!server) {
+            server = getConfig('source') || 'http://localhost:3000';
+            log.info(`使用配置的服务器地址: ${server}`);
+        } else {
+            log.info(`使用指定的服务器地址: ${server}`);
+        }
 
         // 如果没有提供用户名，提示用户输入
         if (!username) {

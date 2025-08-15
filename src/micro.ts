@@ -9,6 +9,7 @@ import {
     checkLogin,
     MicroConfig,
 } from './utils/micro.js';
+import { getConfig } from './config.js';
 import log from './utils/log.js';
 
 interface PublishOptions {
@@ -26,7 +27,14 @@ export async function publishAction(options: PublishOptions): Promise<void> {
 
         // 设置默认值
         const distPath = options.dist || './dist';
-        const server = options.server || 'http://localhost:3000';
+        let server = options.server;
+
+        // 如果没有提供服务器地址，从配置中获取
+        if (!server) {
+            server = getConfig('source') || 'http://localhost:3000';
+            log.info(`使用配置的服务器地址: ${server}`);
+        }
+
         const zipName = options.zipName || `${path.basename(process.cwd())}-${Date.now()}.zip`;
         const zipPath = path.join(os.tmpdir(), zipName);
 
