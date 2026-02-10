@@ -1,13 +1,13 @@
-import color from '../../utils/color.js';
+import color from '../../utils/color';
 import inquirer from 'inquirer';
 import resolver from '@dhlx/resolver';
-import log from '../../utils/log.js';
+import log from '../../utils/log';
 import path from 'path';
-import clone from 'git-clone/promise.js';
+import clone from 'git-clone/promise';
 import ora from 'ora';
 import fs from 'fs';
 import _ from 'lodash';
-import { readJson, writeJson } from '../../utils/json.js';
+import { readJson, writeJson } from '../../utils/json';
 
 interface Template {
     url: string;
