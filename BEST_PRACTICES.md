@@ -44,6 +44,8 @@ CLI Interface (用户)
     Types           ← 类型定义
 ```
 
+    > 参考：项目架构说明 [ARCHITECTURE.md](./ARCHITECTURE.md)
+
 ### 关键特点
 
 - ✅ **清晰的分层**：职责分明，易于维护
