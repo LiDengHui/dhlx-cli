@@ -1,5 +1,5 @@
 import { Command } from 'commander';
-import { compressImages, convertImages, imageSize } from '../../handlers/image/index';
+import { compressImages, convertImages, imageSize } from '../../handlers/image';
 import { parseOptionalInt } from '../shared/parse';
 
 export function registerImageCommands(program: Command): void {

@@ -18,7 +18,7 @@
     "useDefineForClassFields": true,
     /* Bundler mode */
     "resolveJsonModule": true,
-    "isolatedModules": true,
+    "isolatedModules": true
     /* Linting */
   },
   "include": [

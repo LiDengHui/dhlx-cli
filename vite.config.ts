@@ -24,9 +24,9 @@ export default defineConfig({
                 'gh-pages',
                 'sharp',
                 'xlsx',
-                '@dhlx/resolver'
+                '@dhlx/resolver',
             ],
-            output: { entryFileNames: '[name].js', format: 'es' }
-        }
-    }
+            output: { entryFileNames: '[name].js', format: 'es' },
+        },
+    },
 });

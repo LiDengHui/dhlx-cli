@@ -3,12 +3,14 @@
 This document describes the reorganized structure of the CLI project and how to add or modify commands.
 
 Overview
+
 - `src/commands/`: Command registration only — each file declares CLI flags and calls into handlers.
 - `src/handlers/`: Implementation layer — pure functions that perform work (image, document, project, deploy, util, auth).
 - `src/utils/`: Small helpers shared across handlers (excel, auth, logging, etc.).
 - `bin/index.js`: CLI entrypoint that loads `src/register.ts` and starts Commander.
 
 Guidelines
+
 - Keep `src/commands/*` focused on argument parsing and wiring only.
 - Implement business logic in `src/handlers/*` and export from each handler's `index.ts`.
 - Re-export types as `export type { ... } from './module'` when needed by commands to keep `isolatedModules` happy.
@@ -18,14 +20,18 @@ Guidelines
   3. Update `src/register.ts` to include the new registrar.
 
 Build & Test
+
 - Build: `npm run build` (TypeScript compiler)
 - Quick smoke: `node ./bin/index.js --help` and `node ./bin/index.js <command> --help`
 
 Why this layout
+
 - Separates CLI concerns (parsing) from implementation (handlers), improving testability and maintainability.
 
 Notes
+
 - Many legacy root-level files were moved into `src/handlers/`; the root `src/` now contains only orchestration and small helpers.
+
 # DHLX CLI - 架构优化说明
 
 ## 📚 概述
@@ -56,6 +62,7 @@ src/
 ```
 
 **主要问题：**
+
 1. 📍 所有命令处理文件平铺在 src 目录
 2. 🔀 功能类别混乱，相关功能散落各处
 3. 📝 入口文件 (index.ts) 包含 374 行代码，全是重复的命令注册
@@ -129,6 +136,7 @@ commands/
 ```
 
 **优势**：
+
 - 新增命令时，直接在对应的分类目录中添加
 - 相关命令的选项和处理逻辑集中在一起
 - 易于理解命令的功能分组
@@ -136,20 +144,22 @@ commands/
 ### 2. 命令注册系统 (register.ts)
 
 **核心构件**：
+
 ```typescript
 // src/register.ts
 export async function registerAllCommands(program: Command): void {
-    const { registerProjectCommands } = await import('./commands/project/index.js');
-    registerProjectCommands(program);
-    
-    const { registerImageCommands } = await import('./commands/image/index.js');
-    registerImageCommands(program);
-    
-    // ... 其他命令分类
+  const { registerProjectCommands } = await import("./commands/project/index.js");
+  registerProjectCommands(program);
+
+  const { registerImageCommands } = await import("./commands/image/index.js");
+  registerImageCommands(program);
+
+  // ... 其他命令分类
 }
 ```
 
 **优势**：
+
 - 统一的命令注册入口
 - 易于查看有哪些命令分类
 - 可以轻松启用/禁用某个命令分类
@@ -158,6 +168,7 @@ export async function registerAllCommands(program: Command): void {
 ### 3. 简化入口文件 (index.ts)
 
 **优化前**：374 行，全是命令注册代码
+
 ```typescript
 // 优化前 (现在已删除，保留作示例)
 program.command('compress')...
@@ -168,27 +179,29 @@ program.parse(process.argv);
 ```
 
 **优化后**：~20 行
+
 ```typescript
 // src/index.ts (新)
-import { transformed, version } from './version.js';
-import { program } from 'commander';
-import { registerAllCommands } from './register.js';
+import { transformed, version } from "./version.js";
+import { program } from "commander";
+import { registerAllCommands } from "./register.js";
 
 console.info(transformed);
 program.version(version);
 
 async function bootstrap() {
-    await registerAllCommands(program);
-    program.parse(process.argv);
+  await registerAllCommands(program);
+  program.parse(process.argv);
 }
 
 bootstrap().catch((error) => {
-    console.error('Failed to bootstrap CLI:', error);
-    process.exit(1);
+  console.error("Failed to bootstrap CLI:", error);
+  process.exit(1);
 });
 ```
 
 **改进**：
+
 - 代码行数减少 95%
 - 逻辑清晰，易于理解
 - 便于添加初始化逻辑（日志、配置等）
@@ -197,23 +210,23 @@ bootstrap().catch((error) => {
 
 各层功能划分：
 
-| 层级 | 职责 | 示例 |
-|------|------|------|
+| 层级         | 职责               | 示例                                      |
+| ------------ | ------------------ | ----------------------------------------- |
 | **Commands** | 命令注册、选项解析 | `program.command('compress').option(...)` |
-| **Handlers** | 业务逻辑处理 | `compressImages()`, `deployAction()` |
-| **Core** | 通用功能模块 | 图片处理核心、文件操作封装 |
-| **Utils** | 工具函数 | 日志、认证、Excel 读写 |
-| **Types** | 类型定义 | 接口、类型别名 |
+| **Handlers** | 业务逻辑处理       | `compressImages()`, `deployAction()`      |
+| **Core**     | 通用功能模块       | 图片处理核心、文件操作封装                |
+| **Utils**    | 工具函数           | 日志、认证、Excel 读写                    |
+| **Types**    | 类型定义           | 接口、类型别名                            |
 
 ## 📊 代码量对比
 
-| 指标 | 优化前 | 优化后 | 变化 |
-|------|------|------|------|
-| index.ts 行数 | 374 | ~20 | ⬇️ 95% |
-| 命令注册重复代码 | 大量 | 0 | ⬇️ 100% |
-| 命令分类文件 | 0 | 7 | ⬆️ 新增 |
-| 项目结构清晰度 | ⭐⭐ | ⭐⭐⭐⭐⭐ | ⬆️ |
-| 维护难度 | 高 | 低 | ⬇️ |
+| 指标             | 优化前 | 优化后     | 变化    |
+| ---------------- | ------ | ---------- | ------- |
+| index.ts 行数    | 374    | ~20        | ⬇️ 95%  |
+| 命令注册重复代码 | 大量   | 0          | ⬇️ 100% |
+| 命令分类文件     | 0      | 7          | ⬆️ 新增 |
+| 项目结构清晰度   | ⭐⭐   | ⭐⭐⭐⭐⭐ | ⬆️      |
+| 维护难度         | 高     | 低         | ⬇️      |
 
 ## 🚀 如何添加新命令
 
@@ -225,14 +238,14 @@ bootstrap().catch((error) => {
 // src/commands/image/index.ts - 添加以下代码
 
 program
-    .command('thumbnail')
-    .description('生成图片缩略图')
-    .option('-i, --input <path>', '输入图片路径')
-    .option('-o, --output <path>', '输出路径', './output')
-    .option('-s, --size <string>', '缩略图大小', '200x200')
-    .action(async (options) => {
-        await generateThumbnail(options);
-    });
+  .command("thumbnail")
+  .description("生成图片缩略图")
+  .option("-i, --input <path>", "输入图片路径")
+  .option("-o, --output <path>", "输出路径", "./output")
+  .option("-s, --size <string>", "缩略图大小", "200x200")
+  .action(async (options) => {
+    await generateThumbnail(options);
+  });
 
 // 在 src/thumbnail.ts 或相关处理文件中实现 generateThumbnail()
 ```
@@ -252,10 +265,10 @@ mkdir -p src/commands/video
 ```typescript
 // src/register.ts - 添加新的分类
 export async function registerAllCommands(program: Command): Promise<void> {
-    // ... 现有的分类
-    
-    const { registerVideoCommands } = await import('./commands/video/index.js');
-    registerVideoCommands(program);
+  // ... 现有的分类
+
+  const { registerVideoCommands } = await import("./commands/video/index.js");
+  registerVideoCommands(program);
 }
 ```
 
@@ -278,6 +291,7 @@ npx dhlx compress    # 执行压缩命令
 ## 📝 后续优化建议
 
 ### 1. 提取 handlers 层（推荐）
+
 当前业务逻辑还在原有文件中，可以逐步提取到 `handlers/` 目录：
 
 ```typescript
@@ -294,6 +308,7 @@ handlers/
 ```
 
 ### 2. 建立 core 模块（推荐）
+
 提取通用的功能模块：
 
 ```typescript
@@ -309,6 +324,7 @@ core/
 ```
 
 ### 3. 配置文件管理（推荐）
+
 集中管理默认配置：
 
 ```typescript
@@ -319,6 +335,7 @@ config/
 ```
 
 ### 4. 错误处理标准化
+
 建立统一的错误处理机制：
 
 ```typescript
@@ -329,9 +346,11 @@ errors/
 ```
 
 ### 5. 日志系统增强
+
 已有 `utils/log.ts`，可以标准化日志使用
 
 ### 6. 测试覆盖
+
 为各个命令和处理函数添加单元测试：
 
 ```

@@ -90,6 +90,7 @@ export function register[Category]Commands(program: Command): void {
 ```
 
 **规范要点：**
+
 - 导出函数名必须是 `register[Category]Commands`
 - 优先使用异步操作 (`async/await`)
 - 业务逻辑应该分离到对应的处理文件
@@ -97,17 +98,18 @@ export function register[Category]Commands(program: Command): void {
 
 ### 2. 命令分类规则
 
-| 分类 | 职责 | 包含命令 |
-|------|------|---------|
-| `project/` | 项目创建和初始化 | create, init |
-| `image/` | 图片处理 | compress, convert, image-size |
-| `document/` | 文档转换 | word-to-html, pdf2html, excel2json, json2excel, process |
-| `util/` | 开发工具 | code-line, code-map, gh-pages |
-| `deploy/` | 部署和发布 | deploy, micro publish, micro validate |
-| `config/` | 配置管理 | config set/get/list/delete/clear |
-| `auth/` | 身份认证 | login, logout, status |
+| 分类        | 职责             | 包含命令                                                |
+| ----------- | ---------------- | ------------------------------------------------------- |
+| `project/`  | 项目创建和初始化 | create, init                                            |
+| `image/`    | 图片处理         | compress, convert, image-size                           |
+| `document/` | 文档转换         | word-to-html, pdf2html, excel2json, json2excel, process |
+| `util/`     | 开发工具         | code-line, code-map, gh-pages                           |
+| `deploy/`   | 部署和发布       | deploy, micro publish, micro validate                   |
+| `config/`   | 配置管理         | config set/get/list/delete/clear                        |
+| `auth/`     | 身份认证         | login, logout, status                                   |
 
 **添加新分类时：**
+
 - 确保有明确的功能主题
 - 预期至少包含 2 个以上相关命令
 - 在 `register.ts` 中添加注册代码
@@ -160,25 +162,25 @@ src/
 // src/commands/image/index.ts
 
 export function registerImageCommands(program: Command): void {
-    // 现有命令...
+  // 现有命令...
 
-    // 新命令：生成缩略图
-    program
-        .command('thumbnail')
-        .description('生成图片缩略图')
-        .option('-i, --input <path>', '输入图片目录', './')
-        .option('-o, --output <path>', '输出目录', './output')
-        .option('-s, --size <string>', '缩略图尺寸 (WxH)', '200x200')
-        .option('-q, --quality <number>', '质量（1-100）', '80')
-        .action(async (options) => {
-            // 调用业务逻辑
-            await generateThumbnail({
-                input: options.input,
-                output: options.output,
-                size: options.size,
-                quality: parseInt(options.quality),
-            });
-        });
+  // 新命令：生成缩略图
+  program
+    .command("thumbnail")
+    .description("生成图片缩略图")
+    .option("-i, --input <path>", "输入图片目录", "./")
+    .option("-o, --output <path>", "输出目录", "./output")
+    .option("-s, --size <string>", "缩略图尺寸 (WxH)", "200x200")
+    .option("-q, --quality <number>", "质量（1-100）", "80")
+    .action(async (options) => {
+      // 调用业务逻辑
+      await generateThumbnail({
+        input: options.input,
+        output: options.output,
+        size: options.size,
+        quality: parseInt(options.quality),
+      });
+    });
 }
 ```
 
@@ -187,16 +189,16 @@ export function registerImageCommands(program: Command): void {
 ```typescript
 // src/thumbnail.ts
 
-import sharp from 'sharp';
-import path from 'path';
-import fs from 'fs';
-import log from './utils/log.js';
+import sharp from "sharp";
+import path from "path";
+import fs from "fs";
+import log from "./utils/log.js";
 
 interface ThumbnailOptions {
-    input: string;
-    output: string;
-    size: string;
-    quality: number;
+  input: string;
+  output: string;
+  size: string;
+  quality: number;
 }
 
 /**
@@ -204,46 +206,46 @@ interface ThumbnailOptions {
  * @param options - 缩略图生成选项
  */
 export async function generateThumbnail(options: ThumbnailOptions): Promise<void> {
-    const { input, output, size, quality } = options;
-    
-    // 解析尺寸
-    const [width, height] = size.split('x').map(Number);
-    
-    if (!width || !height) {
-        log.error('无效的尺寸格式，请使用 WxH 格式（如 200x200）');
-        return;
+  const { input, output, size, quality } = options;
+
+  // 解析尺寸
+  const [width, height] = size.split("x").map(Number);
+
+  if (!width || !height) {
+    log.error("无效的尺寸格式，请使用 WxH 格式（如 200x200）");
+    return;
+  }
+
+  // 创建输出目录
+  fs.mkdirSync(output, { recursive: true });
+
+  // 读取输入目录
+  const files = fs.readdirSync(input);
+
+  for (const file of files) {
+    const ext = path.extname(file).toLowerCase();
+    if (![".jpg", ".jpeg", ".png", ".webp"].includes(ext)) continue;
+
+    const inputPath = path.join(input, file);
+    const outputName = `thumbnail_${file}`;
+    const outputPath = path.join(output, outputName);
+
+    try {
+      await sharp(inputPath)
+        .resize(width, height, {
+          fit: "cover",
+          position: "center",
+        })
+        .jpeg({ quality, progressive: true })
+        .toFile(outputPath);
+
+      log.success(`✓ 已生成: ${outputName}`);
+    } catch (error) {
+      log.error(`✗ 生成失败: ${file} - ${error}`);
     }
+  }
 
-    // 创建输出目录
-    fs.mkdirSync(output, { recursive: true });
-
-    // 读取输入目录
-    const files = fs.readdirSync(input);
-
-    for (const file of files) {
-        const ext = path.extname(file).toLowerCase();
-        if (!['.jpg', '.jpeg', '.png', '.webp'].includes(ext)) continue;
-
-        const inputPath = path.join(input, file);
-        const outputName = `thumbnail_${file}`;
-        const outputPath = path.join(output, outputName);
-
-        try {
-            await sharp(inputPath)
-                .resize(width, height, {
-                    fit: 'cover',
-                    position: 'center',
-                })
-                .jpeg({ quality, progressive: true })
-                .toFile(outputPath);
-            
-            log.success(`✓ 已生成: ${outputName}`);
-        } catch (error) {
-            log.error(`✗ 生成失败: ${file} - ${error}`);
-        }
-    }
-
-    log.success(`\n所有缩略图已保存到: ${output}`);
+  log.success(`\n所有缩略图已保存到: ${output}`);
 }
 ```
 
@@ -260,20 +262,22 @@ npx dhlx image thumbnail -i ./test-images -o ./thumbs -s 150x150
 ### 命令选项最佳实践
 
 **好的做法：**
+
 ```typescript
 program
-    .command('compress')
-    .description('压缩图片')
-    .option('-i, --input <path>', '输入路径（必需）')
-    .option('-o, --output <path>', '输出路径', './output')
-    .option('-q, --quality <number>', '质量（1-100）', '80')
-    .option('-f, --force', '强制覆盖现有文件')
-    .action(async (options) => {
-        // 实现逻辑
-    });
+  .command("compress")
+  .description("压缩图片")
+  .option("-i, --input <path>", "输入路径（必需）")
+  .option("-o, --output <path>", "输出路径", "./output")
+  .option("-q, --quality <number>", "质量（1-100）", "80")
+  .option("-f, --force", "强制覆盖现有文件")
+  .action(async (options) => {
+    // 实现逻辑
+  });
 ```
 
 **避免的做法：**
+
 ```typescript
 // ❌ 参数描述不清楚
 .option('-q <number>', 'quality')
@@ -295,28 +299,28 @@ program
 // src/handlers/error-handler.ts
 
 export class AppError extends Error {
-    constructor(
-        public code: string,
-        message: string,
-        public details?: any
-    ) {
-        super(message);
-        this.name = 'AppError';
-    }
+  constructor(
+    public code: string,
+    message: string,
+    public details?: any,
+  ) {
+    super(message);
+    this.name = "AppError";
+  }
 }
 
 export function handleError(error: unknown): void {
-    if (error instanceof AppError) {
-        log.error(`[${error.code}] ${error.message}`);
-        if (error.details) {
-            console.error(error.details);
-        }
-    } else if (error instanceof Error) {
-        log.error(`错误: ${error.message}`);
-    } else {
-        log.error('未知错误发生');
+  if (error instanceof AppError) {
+    log.error(`[${error.code}] ${error.message}`);
+    if (error.details) {
+      console.error(error.details);
     }
-    process.exit(1);
+  } else if (error instanceof Error) {
+    log.error(`错误: ${error.message}`);
+  } else {
+    log.error("未知错误发生");
+  }
+  process.exit(1);
 }
 ```
 
@@ -324,20 +328,15 @@ export function handleError(error: unknown): void {
 
 ```typescript
 export async function compressImages(options: CompressOptions): Promise<void> {
-    try {
-        if (!options.input) {
-            throw new AppError(
-                'INVALID_INPUT',
-                '缺少必需的输入路径',
-                { option: '--input' }
-            );
-        }
-
-        // 业务逻辑...
-
-    } catch (error) {
-        handleError(error);
+  try {
+    if (!options.input) {
+      throw new AppError("INVALID_INPUT", "缺少必需的输入路径", { option: "--input" });
     }
+
+    // 业务逻辑...
+  } catch (error) {
+    handleError(error);
+  }
 }
 ```
 
@@ -350,34 +349,34 @@ export async function compressImages(options: CompressOptions): Promise<void> {
 ```typescript
 // __tests__/commands/image/compress.test.ts
 
-import { test } from 'ava';
-import { compressImages } from '../../../src/compress.js';
-import fs from 'fs';
-import path from 'path';
+import { test } from "ava";
+import { compressImages } from "../../../src/compress.js";
+import fs from "fs";
+import path from "path";
 
-test('压缩图片', async (t) => {
-    const inputDir = path.join(__dirname, 'fixtures');
-    const outputDir = path.join(__dirname, 'output');
+test("压缩图片", async (t) => {
+  const inputDir = path.join(__dirname, "fixtures");
+  const outputDir = path.join(__dirname, "output");
 
-    await compressImages({
-        input: inputDir,
-        output: outputDir,
-        quality: 80,
-    });
+  await compressImages({
+    input: inputDir,
+    output: outputDir,
+    quality: 80,
+  });
 
-    const files = fs.readdirSync(outputDir);
-    t.assert(files.length > 0);
+  const files = fs.readdirSync(outputDir);
+  t.assert(files.length > 0);
 });
 
-test('处理无效输入', async (t) => {
-    const error = await t.throwsAsync(
-        () => compressImages({
-            input: '/non/existent/path',
-            output: './output',
-        })
-    );
+test("处理无效输入", async (t) => {
+  const error = await t.throwsAsync(() =>
+    compressImages({
+      input: "/non/existent/path",
+      output: "./output",
+    }),
+  );
 
-    t.is(error.name, 'AppError');
+  t.is(error.name, "AppError");
 });
 ```
 
@@ -402,19 +401,17 @@ npx dhlx convert --help
 ```typescript
 // ❌ 不好：顺序处理，串行执行
 for (const file of files) {
-    await processFile(file);  // 等待每个文件处理完成
+  await processFile(file); // 等待每个文件处理完成
 }
 
 // ✅ 好：并行处理，提高效率
-await Promise.all(
-    files.map(file => processFile(file))
-);
+await Promise.all(files.map((file) => processFile(file)));
 
 // ✅ 更好：控制并发数量
 const limit = 5;
 const chunks = chunk(files, limit);
 for (const batch of chunks) {
-    await Promise.all(batch.map(file => processFile(file)));
+  await Promise.all(batch.map((file) => processFile(file)));
 }
 ```
 
@@ -424,14 +421,14 @@ for (const batch of chunks) {
 // ❌ 不好：一次性加载所有文件到内存
 const allFiles = fs.readdirSync(largeDir);
 const processed = await Promise.all(
-    allFiles.map(processFile)  // 可能导致内存溢出
+  allFiles.map(processFile), // 可能导致内存溢出
 );
 
 // ✅ 好：分批处理，流式处理
 const batchSize = 100;
 for (let i = 0; i < allFiles.length; i += batchSize) {
-    const batch = allFiles.slice(i, i + batchSize);
-    await Promise.all(batch.map(processFile));
+  const batch = allFiles.slice(i, i + batchSize);
+  await Promise.all(batch.map(processFile));
 }
 ```
 
@@ -442,13 +439,13 @@ for (let i = 0; i < allFiles.length; i += batchSize) {
 const cache = new Map<string, any>();
 
 function readExcelCached(path: string) {
-    if (cache.has(path)) {
-        return cache.get(path);
-    }
-    
-    const data = readExcel(path);
-    cache.set(path, data);
-    return data;
+  if (cache.has(path)) {
+    return cache.get(path);
+  }
+
+  const data = readExcel(path);
+  cache.set(path, data);
+  return data;
 }
 ```
 
@@ -459,50 +456,50 @@ function readExcelCached(path: string) {
 ### 1. 路径安全
 
 ```typescript
-import path from 'path';
+import path from "path";
 
 // ❌ 不安全：可能导致目录遍历
 const filePath = `./user-files/${userInput}`;
 
 // ✅ 安全：规范化路径，阻止目录遍历
 function safeResolvePath(basePath: string, userPath: string): string {
-    const resolved = path.resolve(basePath, userPath);
-    const base = path.resolve(basePath);
-    
-    // 确保 resolved 在 base 目录内
-    if (!resolved.startsWith(base)) {
-        throw new Error('非法的路径');
-    }
-    
-    return resolved;
+  const resolved = path.resolve(basePath, userPath);
+  const base = path.resolve(basePath);
+
+  // 确保 resolved 在 base 目录内
+  if (!resolved.startsWith(base)) {
+    throw new Error("非法的路径");
+  }
+
+  return resolved;
 }
 
-const filePath = safeResolvePath('./user-files', userInput);
+const filePath = safeResolvePath("./user-files", userInput);
 ```
 
 ### 2. 命令注入防护
 
 ```typescript
 // ❌ 不安全：直接使用用户输入执行命令
-const { exec } = require('child_process');
+const { exec } = require("child_process");
 exec(`convert ${userInput}.jpg output.jpg`);
 
 // ✅ 安全：使用 execFile 或参数化
-const { execFile } = require('child_process');
-execFile('convert', [`${userInput}.jpg`, 'output.jpg']);
+const { execFile } = require("child_process");
+execFile("convert", [`${userInput}.jpg`, "output.jpg"]);
 ```
 
 ### 3. 敏感信息保护
 
 ```typescript
 // ❌ 不好：打印敏感信息
-console.log('密码:', password);
+console.log("密码:", password);
 
 // ✅ 好：隐藏敏感信息
-if (key === 'password' || key === 'token') {
-    console.log(`${key}: [已隐藏]`);
+if (key === "password" || key === "token") {
+  console.log(`${key}: [已隐藏]`);
 } else {
-    console.log(`${key}: ${value}`);
+  console.log(`${key}: ${value}`);
 }
 ```
 
@@ -511,28 +508,28 @@ if (key === 'password' || key === 'token') {
 ```typescript
 // 创建验证工具
 export function validateFilePath(filePath: string): boolean {
-    // 检查路径是否以正确的扩展名结尾
-    const validExtensions = ['.jpg', '.png', '.gif'];
-    return validExtensions.some(ext => filePath.toLowerCase().endsWith(ext));
+  // 检查路径是否以正确的扩展名结尾
+  const validExtensions = [".jpg", ".png", ".gif"];
+  return validExtensions.some((ext) => filePath.toLowerCase().endsWith(ext));
 }
 
 export function validateQuality(quality: any): number {
-    const num = parseInt(quality);
-    if (isNaN(num) || num < 1 || num > 100) {
-        throw new Error('质量必须在 1-100 之间');
-    }
-    return num;
+  const num = parseInt(quality);
+  if (isNaN(num) || num < 1 || num > 100) {
+    throw new Error("质量必须在 1-100 之间");
+  }
+  return num;
 }
 
 // 使用
 try {
-    if (!validateFilePath(options.input)) {
-        throw new Error('无效的文件格式');
-    }
-    const quality = validateQuality(options.quality);
+  if (!validateFilePath(options.input)) {
+    throw new Error("无效的文件格式");
+  }
+  const quality = validateQuality(options.quality);
 } catch (error) {
-    log.error(error.message);
-    process.exit(1);
+  log.error(error.message);
+  process.exit(1);
 }
 ```
 
@@ -543,6 +540,7 @@ try {
 ### Q1: 如何添加新的命令分类？
 
 **A:** 按以下步骤：
+
 1. 创建 `src/commands/[new-category]/index.ts`
 2. 实现 `register[NewCategory]Commands(program: Command)` 导出函数
 3. 在 `src/register.ts` 中添加导入和注册代码
@@ -553,7 +551,8 @@ try {
 
 ### Q3: 如何测试新命令？
 
-**A:** 
+**A:**
+
 ```bash
 npm run build
 npx dhlx [command] --help
@@ -563,6 +562,7 @@ npx dhlx [command] [options]
 ### Q4: handlers 层何时需要实现？
 
 **A:** 当业务逻辑变得复杂时：
+
 - 多个命令共享相同的逻辑
 - 业务逻辑需要独立测试
 - 需要清晰分离命令定义和业务逻辑

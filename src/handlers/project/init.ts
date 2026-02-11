@@ -4,7 +4,7 @@ import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const files: Record<string, string> = {
-    prettier: 'prettier.config.js',
+    oxfmt: '.oxfmtrc.json',
     tsconfig: 'tsconfig.json',
     jscpd: '.jscpd.json',
     deploy: 'deployConfig.json',
@@ -17,7 +17,7 @@ export function copyConfigFile(type: string): void {
     const file = files[type];
 
     if (!file) {
-        console.error(`Invalid type: ${type}. Supported types are: prettier, tsconfig, jscpd`);
+        console.error(`Invalid type: ${type}. Supported types are: ${getInitKeys().join(', ')}`);
         return;
     }
 

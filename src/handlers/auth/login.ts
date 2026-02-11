@@ -1,6 +1,6 @@
 import readline from 'readline';
 import readlineSync from 'readline-sync';
-import { saveCredentials, deleteCredentials, loadCredentials, LoginCredentials } from '../../utils/auth';
+import { saveCredentials, loadCredentials, LoginCredentials } from '../../utils/auth';
 import { getConfig } from '../../config';
 import log from '../../utils/log';
 
@@ -35,7 +35,7 @@ function promptPassword(question: string): Promise<string> {
                 mask: '*',
             });
             resolve(password.trim());
-        } catch (error) {
+        } catch {
             const rl = createInterface();
             rl.question(question, (answer) => {
                 rl.close();

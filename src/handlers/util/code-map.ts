@@ -31,39 +31,6 @@ function walk(dir: string) {
     }
 }
 
-interface TreeNode {
-    id: string;
-    children: TreeNode[];
-}
-
-function convertToTree(graph: Record<string, string[]>): TreeNode[] {
-    const allNodes = new Set<string>();
-    Object.keys(graph).forEach((key) => allNodes.add(key));
-    Object.values(graph)
-        .flat()
-        .forEach((child) => allNodes.add(child));
-
-    const childNodes = new Set(Object.values(graph).flat());
-
-    const rootNodes = Array.from(allNodes).filter((node) => !childNodes.has(node));
-    const visited = new Set<string>();
-    const trees: TreeNode[] = [];
-
-    function buildTree(node: string): TreeNode | null {
-        if (visited.has(node)) return null;
-        visited.add(node);
-        const children = (graph[node] || []).map((child) => buildTree(child)).filter(Boolean) as TreeNode[];
-        return { id: node, children };
-    }
-
-    rootNodes.forEach((root) => {
-        const tree = buildTree(root);
-        if (tree) trees.push(tree);
-    });
-
-    return trees;
-}
-
 function analyzeFile(filePath: string) {
     if (visited.has(filePath)) return;
     visited.add(filePath);
@@ -71,8 +38,8 @@ function analyzeFile(filePath: string) {
     const content = fs.readFileSync(filePath, 'utf-8');
     const imports: string[] = [];
 
-    const importRegex = /import\s+[^'";]+from\s+['"]([^'\"]+)['"]/g;
-    const requireRegex = /require\(['"]([^'\"]+)['"]\)/g;
+    const importRegex = /import\s+[^'";]+from\s+['"]([^'"]+)['"]/g;
+    const requireRegex = /require\(['"]([^'"]+)['"]\)/g;
     let match: RegExpExecArray | null;
 
     while ((match = importRegex.exec(content)) !== null) {
@@ -115,7 +82,7 @@ function generateMermaid(graph: Record<string, string[]>) {
     for (const [k, v] of Object.entries(graph)) {
         if (v.length === 0) continue;
         for (const child of v) {
-            lines.push(`  \"${k}\" --> \"${child}\"`);
+            lines.push(`  "${k}" --> "${child}"`);
         }
     }
     return lines.join('\n');

@@ -1,5 +1,5 @@
 import { Command } from 'commander';
-import { BaseOptions } from '../../handlers/image/baseImage';
+import { BaseOptions } from '../../handlers/image';
 import { excel2json, json2excel, wordToHtml, pdfToHtml, processExcel } from '../../handlers/document/index';
 import type { Config as ProcessExcelConfig } from '../../handlers/document/index';
 import { loadConfigModule } from '../shared/config';

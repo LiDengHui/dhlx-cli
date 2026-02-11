@@ -29,7 +29,7 @@ Commands:
   word-to-html [options]       Change word to html
   pdf2html [options]           Change pdf to html
   convert [options]            Convert image formats
-  init <type>                  Copy a specific configuration file [prettier,tsconfig,jscpd,deploy,process] from the project to the current working directory
+  init <type>                  Copy a specific configuration file [oxfmt,tsconfig,jscpd,deploy,process] from the project to the current working directory
   deploy [options]             Compress specified directories and upload to server
   excel2json [options]         将 Excel 文件转换为 JSON 格式
   json2excel [options]         将 JSON 文件转换为 Excel 格式
@@ -116,7 +116,7 @@ dhlx create ts-lib my-library
 ### 4.5 复制配置文件
 
 ```bash
-dhlx init prettier // 代码格式化配置
+dhlx init oxfmt // 代码格式化配置
 dhlx init tsconfig // 代码ts配置
 dhlx init deploy   // 代码部署配置
 dhlx init process  // xlsx对比配置
@@ -162,14 +162,14 @@ dhlx code-line -e .report,node_modules,idea,.git,.github,.dist --detail
 dhlx code-map -i ./src -t g6 -d 2
 ```
 
-| 参数                  | 简写   | 类型         | 默认值                                            | 描述              |
-|---------------------|------|------------|------------------------------------------------|-----------------|
-| `--input`           | `-i` | `<path>`   | `./`                                           | 指定要扫描的目录        |
-| `--excludes`        | `-e` | `<string>` | `node_modules,.git,dist,build`                 | 要排除的目录，使用逗号分隔   |
-| `--extensions`      | `-t` | `<string>` | `.js,.ts,.jsx,.tsx,.vue,.html,.css,.scss,.mjs` | 要统计的文件扩展名，逗号分隔  |
+| 参数                | 简写 | 类型       | 默认值                                         | 描述                           |
+| ------------------- | ---- | ---------- | ---------------------------------------------- | ------------------------------ |
+| `--input`           | `-i` | `<path>`   | `./`                                           | 指定要扫描的目录               |
+| `--excludes`        | `-e` | `<string>` | `node_modules,.git,dist,build`                 | 要排除的目录，使用逗号分隔     |
+| `--extensions`      | `-t` | `<string>` | `.js,.ts,.jsx,.tsx,.vue,.html,.css,.scss,.mjs` | 要统计的文件扩展名，逗号分隔   |
 | `--detail`          | `-d` | `flag`     | -                                              | 输出详细的配置信息（用于调试） |
-| `--no-empty-line`   | -    | `flag`     | -                                              | 排除空行统计          |
-| `--no-comment-line` | -    | `flag`     | -                                              | 排除注释行统计         |
+| `--no-empty-line`   | -    | `flag`     | -                                              | 排除空行统计                   |
+| `--no-comment-line` | -    | `flag`     | -                                              | 排除注释行统计                 |
 
 ### 4.9 Excel处理
 
@@ -187,8 +187,11 @@ dhlx process -i input.xlsx -o output.xlsx -b "2025/6/1" -t "2025/5/1"
 ## 五、详细文档
 
 ### [图片格式转换与压缩](./README_IMAGE.md)
-### [deploy命令-文件ssh上传](./README_DEPLOY.md) 
+
+### [deploy命令-文件ssh上传](./README_DEPLOY.md)
+
 ### [process命令-excel数据处理](./README_PROCESS.md)
+
 ### [excel与json-相互转换](./README_EXCEL_JSON.md)
 
 ## 开发者文档
@@ -206,10 +209,10 @@ dhlx process -i input.xlsx -o output.xlsx -b "2025/6/1" -t "2025/5/1"
 
 ### 6.2 支持的配置项
 
-| 配置项 | 描述 | 示例 |
-|--------|------|------|
-| `source` | 默认服务器地址 | `http://localhost:9000` |
-| `username` | 默认用户名 | `admin` |
+| 配置项     | 描述           | 示例                    |
+| ---------- | -------------- | ----------------------- |
+| `source`   | 默认服务器地址 | `http://localhost:9000` |
+| `username` | 默认用户名     | `admin`                 |
 
 ### 6.3 配置优先级
 
@@ -222,6 +225,7 @@ dhlx process -i input.xlsx -o output.xlsx -b "2025/6/1" -t "2025/5/1"
 ### 7.1 登录失败
 
 确保：
+
 - 服务器地址正确
 - 用户名和密码正确
 - 服务器正在运行
@@ -229,6 +233,7 @@ dhlx process -i input.xlsx -o output.xlsx -b "2025/6/1" -t "2025/5/1"
 ### 7.2 微应用发布失败
 
 检查：
+
 - 是否已登录
 - dist目录是否存在
 - micro.config.json 配置是否正确
@@ -236,6 +241,7 @@ dhlx process -i input.xlsx -o output.xlsx -b "2025/6/1" -t "2025/5/1"
 ### 7.3 配置文件问题
 
 如果配置文件损坏，可以：
+
 ```bash
 dhlx config clear  # 清空配置
 dhlx config set source http://your-server  # 重新设置

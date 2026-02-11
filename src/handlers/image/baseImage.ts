@@ -20,7 +20,9 @@ export async function validFiles<T extends BaseOptions>(
         process.exit(1);
     }
 
-    beforeValid && beforeValid(options);
+    if (beforeValid) {
+        beforeValid(options);
+    }
 
     const absoluteInput = path.resolve(input);
     const absoluteOutput = path.resolve(output);

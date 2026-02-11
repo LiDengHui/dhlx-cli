@@ -11,7 +11,7 @@ export default {
 
         return first;
     },
-    result(groupKey, baseData = {}, compareData = {}) {
+    result(_groupKey, _baseData = {}, _compareData = {}) {
         // console.log(groupKey, baseData, compareData)
         return {};
     },

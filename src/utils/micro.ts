@@ -2,7 +2,6 @@ import fs from 'fs';
 import path from 'path';
 import crypto from 'crypto';
 import { createWriteStream } from 'fs';
-import { pipeline } from 'stream/promises';
 import { loadCredentials } from './auth';
 import log from './log';
 
