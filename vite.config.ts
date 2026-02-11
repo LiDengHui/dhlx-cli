@@ -6,11 +6,11 @@ import { builtinModules } from 'module';
 export default defineConfig({
     plugins: [tsconfigPaths()],
     build: {
-        target: 'es2020',
+        // Build an SSR bundle for Node to avoid browser externals
+        ssr: 'src/index.ts',
+        target: 'node18',
         outDir: 'dist',
-        lib: { entry: 'src/index.ts', formats: ['es'] },
         rollupOptions: {
-            // keep node builtins and major runtime deps external
             external: [
                 ...builtinModules,
                 'commander',
@@ -24,9 +24,9 @@ export default defineConfig({
                 'gh-pages',
                 'sharp',
                 'xlsx',
-                '@dhlx/resolver',
+                '@dhlx/resolver'
             ],
-            output: { entryFileNames: '[name].js' },
-        },
-    },
+            output: { entryFileNames: '[name].js', format: 'es' }
+        }
+    }
 });

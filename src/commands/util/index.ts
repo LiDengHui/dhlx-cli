@@ -1,6 +1,6 @@
 import { Command } from 'commander';
-import { codeLine, codeMap, ghPages } from '../../handlers/util/index.js';
-import log from '../../utils/log.js';
+import { codeLine, codeMap, ghPages } from '../../handlers/util/index';
+import log from '../../utils/log';
 
 export function registerUtilCommands(program: Command): void {
     // Code line command

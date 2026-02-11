@@ -1,4 +1,4 @@
-import { BaseOptions, validFiles } from '../image/baseImage.js';
+import { BaseOptions, validFiles } from '../image/baseImage';
 import path from 'path';
 import * as fs from 'node:fs';
 import util from 'node:util';

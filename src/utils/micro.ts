@@ -3,8 +3,8 @@ import path from 'path';
 import crypto from 'crypto';
 import { createWriteStream } from 'fs';
 import { pipeline } from 'stream/promises';
-import { loadCredentials } from './auth.js';
-import log from './log.js';
+import { loadCredentials } from './auth';
+import log from './log';
 
 export interface MicroConfig {
     name: string;

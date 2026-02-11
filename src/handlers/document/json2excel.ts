@@ -1,8 +1,8 @@
-import { BaseOptions } from '../image/baseImage.js';
+import { BaseOptions } from '../image/baseImage';
 import path from 'path';
-import { readJson } from '../../utils/json.js';
-import { writeExcel } from '../../utils/excel.js';
-import log from '../../utils/log.js';
+import { readJson } from '../../utils/json';
+import { writeExcel } from '../../utils/excel';
+import log from '../../utils/log';
 
 interface Json2excelConfig extends BaseOptions {
     sheet?: string;

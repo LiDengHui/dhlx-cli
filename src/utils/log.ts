@@ -1,4 +1,4 @@
-import color from './color.js';
+import color from './color';
 
 const log = {
     error: (...args: any[]) => console.error(color('[ERROR]'), ...args.map((e) => color(e))),

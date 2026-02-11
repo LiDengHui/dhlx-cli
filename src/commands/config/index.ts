@@ -1,6 +1,6 @@
 import { Command } from 'commander';
-import { clearConfig, deleteConfig, getConfig, setConfig, showConfig } from '../../config.js';
-import log from '../../utils/log.js';
+import { clearConfig, deleteConfig, getConfig, setConfig, showConfig } from '../../config';
+import log from '../../utils/log';
 
 export function registerConfigCommands(program: Command): void {
     const configCommand = program.command('config').description('配置管理');

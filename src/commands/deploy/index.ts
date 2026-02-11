@@ -1,6 +1,6 @@
 import { Command } from 'commander';
-import { publishAction, validateMicroConfig, deployAction, DeployOptions } from '../../handlers/deploy/index.js';
-import { loadJsonConfigIfExists } from '../shared/config.js';
+import { publishAction, validateMicroConfig, deployAction, DeployOptions } from '../../handlers/deploy/index';
+import { loadJsonConfigIfExists } from '../shared/config';
 
 interface DeployCommandOptions extends Partial<DeployOptions> {
     config: string;

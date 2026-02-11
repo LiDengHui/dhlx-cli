@@ -8,9 +8,9 @@ import {
     uploadToServer,
     checkLogin,
     MicroConfig,
-} from '../../utils/micro.js';
-import { getConfig } from '../../config.js';
-import log from '../../utils/log.js';
+} from '../../utils/micro';
+import { getConfig } from '../../config';
+import log from '../../utils/log';
 
 interface PublishOptions {
     dist?: string;
@@ -19,19 +19,20 @@ interface PublishOptions {
 }
 
 export async function publishAction(options: PublishOptions): Promise<void> {
+    const distPath = options.dist || './dist';
+    const zipName = options.zipName || `${path.basename(process.cwd())}-${Date.now()}.zip`;
+    const zipPath = path.join(os.tmpdir(), zipName);
+
     try {
         log.info('开始发布微应用...\n');
 
-        const distPath = options.dist || './dist';
         let server = options.server;
 
         if (!server) {
-            server = getConfig('source') || 'http://localhost:3000';
+            const configServer = getConfig<string>('source');
+            server = typeof configServer === 'string' && configServer.trim() ? configServer : 'http://localhost:3000';
             log.info(`使用配置的服务器地址: ${server}`);
         }
-
-        const zipName = options.zipName || `${path.basename(process.cwd())}-${Date.now()}.zip`;
-        const zipPath = path.join(os.tmpdir(), zipName);
 
         log.info('1. 检查登录状态...');
         const token = checkLogin();
@@ -50,12 +51,6 @@ export async function publishAction(options: PublishOptions): Promise<void> {
         log.info('5. 上传到服务器...');
         const result = await uploadToServer(zipPath, server, token, microConfig);
 
-        log.info('6. 清理临时文件...');
-        if (fs.existsSync(zipPath)) {
-            fs.unlinkSync(zipPath);
-            log.info('临时 ZIP 文件已删除');
-        }
-
         log.success('微应用发布成功！');
         log.info(`应用名称: ${microConfig.name}`);
         log.info(`版本: ${microConfig.version}`);
@@ -66,16 +61,16 @@ export async function publishAction(options: PublishOptions): Promise<void> {
         }
     } catch (error) {
         log.error(`发布失败: ${error}`);
-        const zipPath = path.join(os.tmpdir(), options.zipName || `${path.basename(process.cwd())}-${Date.now()}.zip`);
+        process.exit(1);
+    } finally {
         if (fs.existsSync(zipPath)) {
             try {
                 fs.unlinkSync(zipPath);
+                log.info('临时 ZIP 文件已删除');
             } catch (cleanupError) {
                 log.error(`无法删除临时文件: ${cleanupError}`);
             }
         }
-
-        process.exit(1);
     }
 }
 

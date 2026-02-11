@@ -1,4 +1,4 @@
-import { BaseOptions, validFiles } from '../image/baseImage.js';
+import { BaseOptions, validFiles } from '../image/baseImage';
 import mammoth from 'mammoth';
 import path from 'path';
 import * as fs from 'node:fs';

@@ -1,5 +1,5 @@
 import sharp from 'sharp';
-import { BaseOptions, defaultImage, validFiles } from './baseImage.js';
+import { BaseOptions, defaultImage, validFiles } from './baseImage';
 import path from 'path';
 
 interface CompressOptions extends BaseOptions {

@@ -1,6 +1,6 @@
 import { program } from 'commander';
-import { registerAllCommands } from './register.js';
-import { transformed, version } from './version.js';
+import { registerAllCommands } from './register';
+import { transformed, version } from './version';
 
 console.info(transformed);
 

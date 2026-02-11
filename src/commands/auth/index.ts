@@ -1,6 +1,6 @@
 import { Command } from 'commander';
-import { loginAction, checkLoginStatus, deleteCredentials } from '../../handlers/auth/index.js';
-import log from '../../utils/log.js';
+import { loginAction, checkLoginStatus, deleteCredentials } from '../../handlers/auth/index';
+import log from '../../utils/log';
 
 export function registerAuthCommands(program: Command): void {
     // Login command

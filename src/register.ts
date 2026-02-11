@@ -1,12 +1,12 @@
 import { Command } from 'commander';
-import { registerAuthCommands } from './commands/auth/index.js';
-import { registerConfigCommands } from './commands/config/index.js';
-import { registerDeployCommands } from './commands/deploy/index.js';
-import { registerDocumentCommands } from './commands/document/index.js';
-import { registerImageCommands } from './commands/image/index.js';
-import { registerProjectCommands } from './commands/project/index.js';
-import { applyRegistrars, CommandRegistrar } from './commands/shared/command.js';
-import { registerUtilCommands } from './commands/util/index.js';
+import { registerAuthCommands } from './commands/auth/index';
+import { registerConfigCommands } from './commands/config/index';
+import { registerDeployCommands } from './commands/deploy/index';
+import { registerDocumentCommands } from './commands/document/index';
+import { registerImageCommands } from './commands/image/index';
+import { registerProjectCommands } from './commands/project/index';
+import { applyRegistrars, CommandRegistrar } from './commands/shared/command';
+import { registerUtilCommands } from './commands/util/index';
 
 const COMMAND_REGISTRARS: ReadonlyArray<CommandRegistrar> = [
     registerProjectCommands,

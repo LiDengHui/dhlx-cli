@@ -1,20 +1,6 @@
 import fs from 'fs';
-import path from 'path';
-import { homedir } from 'os';
-
-interface DhlxConfig {
-    source?: string; // 默认服务器地址
-    username?: string; // 默认用户名
-    token?: {
-        accessToken: string;
-        refreshToken: string;
-    };
-    loginTime?: number;
-    expiresAt?: number;
-    [key: string]: any; // 其他配置项
-}
-
-const CONFIG_FILE = path.join(homedir(), '.dhlxrc');
+import { ConfigParseError, CONFIG_FILE, readConfig, writeConfig } from './utils/config-store';
+import type { DhlxConfig } from './utils/config-store';
 
 /**
  * 获取配置文件路径
@@ -28,38 +14,30 @@ function getConfigPath(): string {
  */
 function loadConfig(): DhlxConfig {
     try {
-        if (fs.existsSync(CONFIG_FILE)) {
-            const configData = fs.readFileSync(CONFIG_FILE, 'utf-8');
-            return JSON.parse(configData);
-        }
+        return readConfig();
     } catch (error) {
-        console.error('读取配置文件失败:', error);
+        if (error instanceof ConfigParseError) {
+            console.error(`读取配置文件失败: ${error.message}`);
+            if (error.backupPath) {
+                console.error(`已备份损坏配置文件到: ${error.backupPath}`);
+            }
+            throw new Error(`配置文件已损坏，请修复或删除后重试: ${getConfigPath()}`);
+        }
+        throw error;
     }
-    return {};
 }
 
 /**
  * 保存配置
  */
 function saveConfig(config: DhlxConfig): void {
-    try {
-        // 确保目录存在
-        const configDir = path.dirname(CONFIG_FILE);
-        if (!fs.existsSync(configDir)) {
-            fs.mkdirSync(configDir, { recursive: true });
-        }
-
-        fs.writeFileSync(CONFIG_FILE, JSON.stringify(config, null, 2), 'utf-8');
-    } catch (error) {
-        console.error('保存配置文件失败:', error);
-        throw error;
-    }
+    writeConfig(config);
 }
 
 /**
  * 设置配置项
  */
-export function setConfig(key: string, value: string): void {
+export function setConfig(key: string, value: unknown): void {
     const config = loadConfig();
     config[key] = value;
     saveConfig(config);
@@ -68,9 +46,9 @@ export function setConfig(key: string, value: string): void {
 /**
  * 获取配置项
  */
-export function getConfig(key: string): string | undefined {
+export function getConfig<T = unknown>(key: string): T | undefined {
     const config = loadConfig();
-    return config[key];
+    return config[key] as T | undefined;
 }
 
 /**
@@ -119,9 +97,16 @@ export function showConfig(): void {
         if (key === 'token') {
             console.log(`  ${key}: [已隐藏]`);
         } else if (key === 'loginTime' || key === 'expiresAt') {
-            console.log(`  ${key}: ${new Date(value).toLocaleString()}`);
+            const ts = typeof value === 'number' ? value : Number(value);
+            if (Number.isFinite(ts)) {
+                console.log(`  ${key}: ${new Date(ts).toLocaleString()}`);
+            } else {
+                console.log(`  ${key}: [无效时间戳: ${String(value)}]`);
+            }
         } else {
             console.log(`  ${key}: ${value}`);
         }
     });
 }
+
+export type { DhlxConfig } from './utils/config-store';

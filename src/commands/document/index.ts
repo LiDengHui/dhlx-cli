@@ -1,8 +1,8 @@
 import { Command } from 'commander';
-import { BaseOptions } from '../../handlers/image/baseImage.js';
-import { excel2json, json2excel, wordToHtml, pdfToHtml, processExcel } from '../../handlers/document/index.js';
-import type { Config as ProcessExcelConfig } from '../../handlers/document/processExcel.js';
-import { loadConfigModule } from '../shared/config.js';
+import { BaseOptions } from '../../handlers/image/baseImage';
+import { excel2json, json2excel, wordToHtml, pdfToHtml, processExcel } from '../../handlers/document/index';
+import type { Config as ProcessExcelConfig } from '../../handlers/document/index';
+import { loadConfigModule } from '../shared/config';
 
 type ConfigurableOptions<TOptions extends object> = TOptions & { config?: string };
 

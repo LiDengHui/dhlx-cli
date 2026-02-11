@@ -1,5 +1,5 @@
-export { compressImages } from './compress.js';
-export { convertImages } from './convert.js';
-export { imageSize } from './imageSize.js';
-export type { BaseOptions } from './baseImage.js';
-export { defaultImage, validFiles } from './baseImage.js';
+export { compressImages } from './compress';
+export { convertImages } from './convert';
+export { imageSize } from './imageSize';
+export type { BaseOptions } from './baseImage';
+export { defaultImage, validFiles } from './baseImage';

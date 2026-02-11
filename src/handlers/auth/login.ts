@@ -1,8 +1,8 @@
 import readline from 'readline';
 import readlineSync from 'readline-sync';
-import { saveCredentials, deleteCredentials, LoginCredentials } from '../../utils/auth.js';
-import { getConfig } from '../../config.js';
-import log from '../../utils/log.js';
+import { saveCredentials, deleteCredentials, loadCredentials, LoginCredentials } from '../../utils/auth';
+import { getConfig } from '../../config';
+import log from '../../utils/log';
 
 interface LoginOptions {
     username?: string;
@@ -91,7 +91,8 @@ export async function loginAction(options: LoginOptions): Promise<void> {
         let server = options.server;
 
         if (!server) {
-            server = getConfig('source') || 'http://localhost:3000';
+            const configServer = getConfig<string>('source');
+            server = typeof configServer === 'string' && configServer.trim() ? configServer : 'http://localhost:3000';
             log.info(`使用配置的服务器地址: ${server}`);
         }
 
@@ -115,7 +116,6 @@ export async function loginAction(options: LoginOptions): Promise<void> {
 }
 
 export async function checkLoginStatus(): Promise<boolean> {
-    const { loadCredentials } = await import('../../utils/auth.js');
     const credentials = loadCredentials();
 
     if (!credentials) {

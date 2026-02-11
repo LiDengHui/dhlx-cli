@@ -1,4 +1,4 @@
-import { BaseOptions, defaultImage, validFiles } from './baseImage.js';
+import { BaseOptions, defaultImage, validFiles } from './baseImage';
 import path from 'path';
 import sharp, { FitEnum } from 'sharp';
 

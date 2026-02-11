@@ -1,3 +1,3 @@
-export { codeLine } from './codeLine.js';
-export { codeMap } from './code-map.js';
-export { ghPages } from './gh-pages.js';
+export { codeLine } from './codeLine';
+export { codeMap } from './code-map';
+export { ghPages } from './gh-pages';

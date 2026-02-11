@@ -1,6 +1,6 @@
 import figlet from 'figlet';
 import Printer from '@darkobits/lolcatjs';
-import { readJson } from './utils/json.js';
+import { readJson } from './utils/json';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';

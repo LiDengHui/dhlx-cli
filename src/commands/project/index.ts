@@ -1,5 +1,5 @@
 import { Command } from 'commander';
-import { createProject, copyConfigFile, getInitKeys } from '../../handlers/project/index.js';
+import { createProject, copyConfigFile, getInitKeys } from '../../handlers/project/index';
 
 export function registerProjectCommands(program: Command): void {
     // Create command

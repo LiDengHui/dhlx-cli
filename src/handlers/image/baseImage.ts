@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import log from '../../utils/log.js';
+import log from '../../utils/log';
 
 export interface BaseOptions {
     input: string;

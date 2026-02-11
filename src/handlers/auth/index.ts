@@ -1,2 +1,2 @@
-export { loginAction, checkLoginStatus } from './login.js';
-export { deleteCredentials, loadCredentials } from '../../utils/auth.js';
+export { loginAction, checkLoginStatus } from './login';
+export { deleteCredentials, loadCredentials } from '../../utils/auth';

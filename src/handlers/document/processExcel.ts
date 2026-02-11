@@ -1,4 +1,4 @@
-import { readExcel, writeExcel } from '../../utils/excel.js';
+import { readExcel, writeExcel } from '../../utils/excel';
 
 export interface Config<T = any> {
     file: string;
