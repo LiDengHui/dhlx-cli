@@ -186,19 +186,14 @@ dhlx process -i input.xlsx -o output.xlsx -b "2025/6/1" -t "2025/5/1"
 
 ## 五、详细文档
 
-### [图片格式转换与压缩](./README_IMAGE.md)
+### [图片格式转换与压缩](./docs/README_IMAGE.md)
 
-### [deploy命令-文件ssh上传](./README_DEPLOY.md)
+### [deploy命令-文件ssh上传](./docs/README_DEPLOY.md)
 
-### [process命令-excel数据处理](./README_PROCESS.md)
+### [process命令-excel数据处理](./docs/README_PROCESS.md)
 
-### [excel与json-相互转换](./README_EXCEL_JSON.md)
+### [excel与json-相互转换](./docs/README_EXCEL_JSON.md)
 
-## 开发者文档
-
-- **架构说明**: [ARCHITECTURE.md](./ARCHITECTURE.md)
-- **最佳实践**: [BEST_PRACTICES.md](./BEST_PRACTICES.md)
-- **重构说明**: [OPTIMIZATION_SUMMARY.md](./OPTIMIZATION_SUMMARY.md)
 
 ## 六、配置说明
 

@@ -1,82 +1,81 @@
 {
-  "name": "@dhlx/dhlx-cli",
-  "version": "1.0.1",
-  "private": false,
-  "description": "dhlx 脚本",
-  "keywords": [
-    "cli",
-    "create",
-    "program"
-  ],
-  "license": "MIT",
-  "author": "lidenghui <3379489032@qq.com>",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/LiDengHui/dhlx-cli.git"
-  },
-  "bin": {
-    "dhlx": "bin/index.js"
-  },
-  "files": [
-    "bin/",
-    "dist/",
-    "README.md",
-    "LICENSE"
-  ],
-  "type": "module",
-  "main": "./dist/index.js",
-  "scripts": {
-    "build": "vite build",
-    "test": "ava",
-    "oxfmt": "oxfmt --write \"src/**/*.{ts,js}\" \"bin/**/*.js\" \"*.{ts,js}\"",
-    "oxlint": "oxlint src bin process.js vite.config.ts",
-    "pre-commit": "lint-staged",
-    "jscpd": "jscpd -c .jscpd.json",
-    "prepublishOnly": "npm run build",
-    "prepare": "husky"
-  },
-  "dependencies": {
-    "@types/readline-sync": "^1.4.8",
-    "readline-sync": "^1.4.10",
-    "sharp": "^0.34.5"
-  },
-  "devDependencies": {
-    "@types/archiver": "^7.0.0",
-    "@types/figlet": "^1.7.0",
-    "@types/gh-pages": "^6.1.0",
-    "@types/git-clone": "^0.2.4",
-    "@types/lodash": "^4.17.23",
-    "@types/ssh2": "^1.15.5",
-    "ava": "^6.4.1",
-    "husky": "^9.1.7",
-    "jscpd": "^4.0.8",
-    "lint-staged": "^16.2.7",
-    "oxfmt": "^0.31.0",
-    "oxlint": "^1.46.0",
-    "typescript": "^5.9.3",
-    "vite": "^7.3.1",
-    "vite-tsconfig-paths": "^6.1.0"
-  },
-  "peerDependencies": {
-    "@darkobits/lolcatjs": "^4.0.1",
-    "@dhlx/resolver": "^0.0.6",
-    "archiver": "^7.0.1",
-    "commander": "^12.1.0",
-    "figlet": "^1.7.0",
-    "gh-pages": "^6.3.0",
-    "git-clone": "^0.2.0",
-    "inquirer": "^11.0.2",
-    "lodash": "^4.17.21",
-    "mammoth": "^1.9.0",
-    "node-ssh": "^13.2.0",
-    "ora": "^8.1.0",
-    "shelljs": "^0.8.5",
-    "xlsx": "^0.18.5"
-  },
-  "lint-staged": {
-    "*.{js,mjs,cjs,ts,mts,cts,jsx,tsx}": [
-      "oxfmt --write",
-      "oxlint"
-    ]
-  }
+    "name": "@dhlx/dhlx-cli",
+    "version": "1.0.1",
+    "private": false,
+    "description": "dhlx 脚本",
+    "keywords": [
+        "cli",
+        "create",
+        "program"
+    ],
+    "license": "MIT",
+    "author": "lidenghui <3379489032@qq.com>",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/LiDengHui/dhlx-cli.git"
+    },
+    "bin": {
+        "dhlx": "bin/index.js"
+    },
+    "files": [
+        "bin/",
+        "dist/",
+        "docs/",
+        "README.md",
+        "LICENSE"
+    ],
+    "type": "module",
+    "main": "./dist/index.js",
+    "scripts": {
+        "build": "vite build",
+        "test": "ava",
+        "oxfmt": "oxfmt --write \"src/**/*.{ts,js}\" \"bin/**/*.js\" \"*.{ts,js}\"",
+        "oxlint": "oxlint src bin process.js vite.config.ts",
+        "pre-commit": "lint-staged",
+        "jscpd": "jscpd -c .jscpd.json",
+        "prepublishOnly": "npm run build",
+        "prepare": "husky"
+    },
+    "devDependencies": {
+        "@types/archiver": "^7.0.0",
+        "@types/figlet": "^1.7.0",
+        "@types/gh-pages": "^6.1.0",
+        "@types/git-clone": "^0.2.4",
+        "@types/lodash": "^4.17.23",
+        "@types/ssh2": "^1.15.5",
+        "ava": "^6.4.1",
+        "husky": "^9.1.7",
+        "jscpd": "^4.0.8",
+        "lint-staged": "^16.2.7",
+        "oxfmt": "^0.31.0",
+        "oxlint": "^1.46.0",
+        "readline-sync": "^1.4.10",
+        "sharp": "^0.34.5",
+        "typescript": "^5.9.3",
+        "vite": "^7.3.1",
+        "vite-tsconfig-paths": "^6.1.0"
+    },
+    "peerDependencies": {
+        "@darkobits/lolcatjs": "^4.0.1",
+        "@dhlx/resolver": "^0.0.6",
+        "@types/readline-sync": "^1.4.8",
+        "archiver": "^7.0.1",
+        "commander": "^12.1.0",
+        "figlet": "^1.7.0",
+        "gh-pages": "^6.3.0",
+        "git-clone": "^0.2.0",
+        "inquirer": "^11.0.2",
+        "lodash": "^4.17.21",
+        "mammoth": "^1.9.0",
+        "node-ssh": "^13.2.0",
+        "ora": "^8.1.0",
+        "shelljs": "^0.8.5",
+        "xlsx": "^0.18.5"
+    },
+    "lint-staged": {
+        "*.{js,mjs,cjs,ts,mts,cts,jsx,tsx}": [
+            "oxfmt --write",
+            "oxlint"
+        ]
+    }
 }

@@ -1,15 +1,15 @@
 {
-  "threshold": 0.1,
-  "reporters": ["html", "console"],
-  "ignore": [
-    "**/node_modules/**",
-    "**/.npmrc",
-    "**/.idea/**",
-    "**/.github/**",
-    "**/.report/**",
-    "**/package-lock.json"
-  ],
-  "absolute": true,
-  "gitignore": true,
-  "output": ".report"
+    "threshold": 0.1,
+    "reporters": ["html", "console"],
+    "ignore": [
+        "**/node_modules/**",
+        "**/.npmrc",
+        "**/.idea/**",
+        "**/.github/**",
+        "**/.report/**",
+        "**/package-lock.json"
+    ],
+    "absolute": true,
+    "gitignore": true,
+    "output": ".report"
 }

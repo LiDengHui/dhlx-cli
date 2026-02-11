@@ -1,27 +1,23 @@
 {
-  "compilerOptions": {
-    "lib": [
-      "ESNext"
-    ],
-    "declaration": true,
-    "declarationMap": true,
-    "esModuleInterop": true,
-    "module": "ESNext",
-    "moduleResolution": "bundler",
-    "noEmit": false,
-    "outDir": "dist",
-    "rootDir": "src",
-    "skipLibCheck": true,
-    "sourceMap": true,
-    "strict": true,
-    "target": "ES2021",
-    "useDefineForClassFields": true,
-    /* Bundler mode */
-    "resolveJsonModule": true,
-    "isolatedModules": true
-    /* Linting */
-  },
-  "include": [
-    "src/*"
-  ]
+    "compilerOptions": {
+        "lib": ["ESNext"],
+        "declaration": true,
+        "declarationMap": true,
+        "esModuleInterop": true,
+        "module": "ESNext",
+        "moduleResolution": "bundler",
+        "noEmit": false,
+        "outDir": "dist",
+        "rootDir": "src",
+        "skipLibCheck": true,
+        "sourceMap": true,
+        "strict": true,
+        "target": "ES2021",
+        "useDefineForClassFields": true,
+        /* Bundler mode */
+        "resolveJsonModule": true,
+        "isolatedModules": true
+        /* Linting */
+    },
+    "include": ["src/*"]
 }
