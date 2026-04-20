@@ -54,6 +54,7 @@ export function registerDeployCommands(program: Command): void {
         .option('-h, --host <host>', 'SSH host')
         .option('-u, --user <user>', 'SSH username')
         .option('-p, --password <password>', 'SSH password')
+        .option('-k, --private-key-path <path>', 'SSH private key path')
         .option('-r, --remote <path>', 'Remote directory path', '/var/www/uploads')
         .option('-e, --extract <path>', 'Remote extract directory', '/var/www/static')
         .action(async (options: DeployCommandOptions) => {

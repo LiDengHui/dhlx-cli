@@ -1,0 +1,11 @@
+[
+    {
+        "mode": "dev",
+        "source": "public",
+        "host": "8.8.8.8",
+        "user": "root",
+        "privateKeyPath": "~/.ssh/id_rsa",
+        "remote": "/home/box/static/mini-app",
+        "extract": "/home/box/static/mini-app"
+    }
+]

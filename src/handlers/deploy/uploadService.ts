@@ -18,7 +18,6 @@ export interface DeployOptions {
 
 export async function deployAction(options: DeployOptions): Promise<void> {
     const { source, zip, host, user, password, privateKeyPath, remote, extract, exclude = [] } = options;
-    console.log(options);
     if (!source) {
         console.error('Error: No source directory provided');
         process.exit(1);
@@ -77,7 +76,12 @@ async function uploadAndExtractFile(
     { host, user, password, privateKeyPath, remote, extract }: UploadOptions,
 ): Promise<void> {
     const ssh = new NodeSSH();
-    const connectionOptions: any = { host, username: user };
+    const connectionOptions: {
+        host: string;
+        username: string;
+        password?: string;
+        privateKey?: string;
+    } = { host, username: user };
 
     if (password) {
         connectionOptions.password = password;
@@ -110,8 +114,12 @@ function resolvePrivateKeyPath(candidate?: string): string {
         return path.join(os.homedir(), '.ssh', 'id_rsa');
     }
 
-    if (candidate.startsWith('~')) {
-        return path.join(os.homedir(), candidate.slice(1));
+    if (candidate === '~') {
+        return os.homedir();
+    }
+
+    if (candidate.startsWith('~/') || candidate.startsWith('~\\')) {
+        return path.join(os.homedir(), candidate.slice(2));
     }
 
     if (path.isAbsolute(candidate)) {

@@ -148,8 +148,11 @@ dhlx image-size -i ./input -o ./output -w 800 -h 600
 # 部署github pages页面
 dhlx gh-pages -i dist
 
-# SSH部署
+# SSH部署（密码）
 dhlx deploy -h example.com -u username -p password -r /var/www
+
+# SSH部署（私钥）
+dhlx deploy -h example.com -u username -k ~/.ssh/id_rsa -r /var/www
 ```
 
 ### 4.8 代码统计
