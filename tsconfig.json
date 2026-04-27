@@ -14,10 +14,8 @@
         "strict": true,
         "target": "ES2021",
         "useDefineForClassFields": true,
-        /* Bundler mode */
         "resolveJsonModule": true,
         "isolatedModules": true
-        /* Linting */
     },
-    "include": ["src/*"]
+    "include": ["src/**/*.ts"]
 }

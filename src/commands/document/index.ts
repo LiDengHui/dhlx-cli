@@ -1,6 +1,6 @@
 import { Command } from 'commander';
 import { BaseOptions } from '../../handlers/image';
-import { excel2json, json2excel, wordToHtml, pdfToHtml, processExcel } from '../../handlers/document/index';
+import { excel2json, json2excel, wordToHtml, pdfToHtml, pdfToImg, processExcel } from '../../handlers/document/index';
 import type { Config as ProcessExcelConfig } from '../../handlers/document/index';
 import { loadConfigModule } from '../shared/config';
 
@@ -35,6 +35,26 @@ export function registerDocumentCommands(program: Command): void {
             await pdfToHtml({
                 input: options.input,
                 output: options.output,
+            });
+        });
+
+    program
+        .command('pdf2img')
+        .description('Change pdf to image')
+        .option('-i, --input <path>', 'Input file or folder path')
+        .option('-o, --output <path>', 'Output folder path', './output')
+        .option('-f, --format <format>', 'Output image format (png|jpeg|tiff)', 'png')
+        .option('-p, --page <number>', 'Convert only the specified page')
+        .option('-s, --scale <number>', 'Quick Look thumbnail size on macOS', '1024')
+        .option('--prefix <name>', 'Output filename prefix')
+        .action(async (options) => {
+            await pdfToImg({
+                input: options.input,
+                output: options.output,
+                format: options.format,
+                page: options.page ? Number(options.page) : undefined,
+                scale: options.scale ? Number(options.scale) : undefined,
+                prefix: options.prefix,
             });
         });
 

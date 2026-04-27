@@ -3,7 +3,7 @@ import inquirer from 'inquirer';
 import resolver from '@dhlx/resolver';
 import log from '../../utils/log';
 import path from 'path';
-import clone from 'git-clone/promise';
+import clone from 'git-clone/promise.js';
 import ora from 'ora';
 import fs from 'fs';
 import _ from 'lodash';

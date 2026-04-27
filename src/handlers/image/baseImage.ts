@@ -27,12 +27,17 @@ export async function validFiles<T extends BaseOptions>(
     const absoluteInput = path.resolve(input);
     const absoluteOutput = path.resolve(output);
 
-    const getFiles = (dir: string): string[] => {
+    const getFiles = (targetPath: string): string[] => {
+        const stat = fs.statSync(targetPath);
+        if (stat.isFile()) {
+            return [targetPath];
+        }
+
         const files: string[] = [];
-        const items = fs.readdirSync(dir);
+        const items = fs.readdirSync(targetPath);
 
         items.forEach((item) => {
-            const fullPath = path.join(dir, item);
+            const fullPath = path.join(targetPath, item);
             if (fs.statSync(fullPath).isDirectory()) {
                 files.push(...getFiles(fullPath));
             } else {

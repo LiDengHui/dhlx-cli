@@ -1,6 +1,6 @@
 {
     "name": "@dhlx/dhlx-cli",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "private": false,
     "description": "dhlx 脚本",
     "keywords": [
@@ -27,15 +27,17 @@
     "type": "module",
     "main": "./dist/index.js",
     "scripts": {
-        "build": "vite build",
-        "test": "ava",
-        "oxfmt": "oxfmt --write \"src/**/*.{ts,js}\" \"bin/**/*.js\" \"*.{ts,js}\"",
-        "oxlint": "oxlint src bin process.js vite.config.ts",
-        "pre-commit": "lint-staged",
+        "build": "vp build",
+        "check": "vp check",
+        "fmt": "vp fmt --write",
+        "lint": "vp lint",
+        "pre-commit": "vp staged",
         "jscpd": "jscpd -c .jscpd.json",
         "prepublishOnly": "npm run build",
-        "prepare": "husky"
+        "prepare": "husky",
+        "test": "vp test run"
     },
+    "dependencies": {},
     "devDependencies": {
         "@types/archiver": "^7.0.0",
         "@types/figlet": "^1.7.0",
@@ -43,17 +45,12 @@
         "@types/git-clone": "^0.2.4",
         "@types/lodash": "^4.17.23",
         "@types/ssh2": "^1.15.5",
-        "ava": "^6.4.1",
         "husky": "^9.1.7",
         "jscpd": "^4.0.8",
-        "lint-staged": "^16.2.7",
-        "oxfmt": "^0.31.0",
-        "oxlint": "^1.46.0",
         "readline-sync": "^1.4.10",
         "sharp": "^0.34.5",
         "typescript": "^5.9.3",
-        "vite": "^7.3.1",
-        "vite-tsconfig-paths": "^6.1.0"
+        "vite-plus": "^0.1.19"
     },
     "peerDependencies": {
         "@darkobits/lolcatjs": "^4.0.1",
@@ -72,10 +69,5 @@
         "shelljs": "^0.8.5",
         "xlsx": "^0.18.5"
     },
-    "lint-staged": {
-        "*.{js,mjs,cjs,ts,mts,cts,jsx,tsx}": [
-            "oxfmt --write",
-            "oxlint"
-        ]
-    }
+    "packageManager": "npm@10.9.7"
 }
